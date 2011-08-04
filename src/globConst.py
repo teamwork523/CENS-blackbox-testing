@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 # A complete definition of all the necessary constant
 
 USERNAME = 'ohmage.luo'
@@ -36,7 +38,10 @@ XML_FILE_DUP='./test_file/xml/test_dup.xml'
 XML_FILE_SAME_URN='./test_file/xml/test_urn_same.xml'
 
 # Error Summary
-ERROR={'0200': }
+ERROR = {'0200': 'Authentication failed',\
+         '0807': 'invalid campaign URN list or invalid URN in list',\
+         '0816': 'User is not a supervisor in all the campaigns in the list.',\
+         }
 
 
 

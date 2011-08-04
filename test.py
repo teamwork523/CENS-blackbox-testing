@@ -39,5 +39,6 @@ print (t.cont_dict)['errors']
 print (t.cont_dict)['errors'][0]['code']
 print type(t.cont_dict['errors'])
 print type(t.cont_dict['errors'][0]['code'])
+print urllib.urlencode(pass_in)
 
 
