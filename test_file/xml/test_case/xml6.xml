@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<campaign>
+    <campaignUrn>urn:campaign:ca:ucla:Mobilize:July:2011:Test</campaignUrn>
+    <campaignName>Test</campaignName>
+    <serverUrl>https://dev.mobilizingcs.org/</serverUrl>
+    
+</campaign>

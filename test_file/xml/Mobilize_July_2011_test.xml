@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<campaign>
+  <campaignUrn>urn:campaign:ca:ucla:Mobilize:July:2011:Test</campaignUrn>
+  <campaignName>Test</campaignName>
+  <serverUrl>https://dev.mobilizingcs.org/</serverUrl>
+  
+  <surveys>
+
+    <survey>
+      <id>SleepPattern</id>
+      <title>Sleep Pattern</title>
+      <description>Observe and collect sleep pattern</description>
+      <submitText>sleep pattern</submitText>
+      <showSummary>false</showSummary>
+      <anytime>true</anytime>
+      
+      <contentList>
+        <prompt>
+          <id>sexualEncounterHowManyHoursAgo</id>
+          <displayType>metadata</displayType>
+          <displayLabel>Sexual Encounter - How many hours ago</displayLabel>
+          <promptText>How many hours ago did it occur?</promptText>
+          <abbreviatedText>abbreviatedText must not be empty if showSummary on its parent survey is true.</abbreviatedText>
+          <promptType>number</promptType>
+           <properties>
+            <property>
+              <key>min</key>
+              <label>0</label>
+            </property>
+            <property>
+              <key>max</key>
+              <label>24</label>
+            </property>
+          </properties>
+          <skippable>false</skippable>
+        </prompt>
+        
+      </contentList>
+    </survey>
+  </surveys>
+</campaign>

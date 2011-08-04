@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<campaign>
+    <campaignUrn>urn:campaign:ca:ucla:Mobilize:July:2011:SuperCampaign</campaignUrn>
+    <campaignName>SuperCampaign</campaignName>
+    <serverUrl>https://dev.mobilizingcs.org/</serverUrl>
+    <surveys>
+        <survey>
+            <id>Today</id>
+            <title>How is it going?</title>
+            <description>Observe and collect information about people's habbit</description>
+            <submitText>Habbit</submitText>
+            <showSummary>false</showSummary>
+            <editSummary>false</editSummary>
+            <summaryText>Provide health advises based on people's habit</summaryText>
+            <anytime>true</anytime>
+    
+            <contentList>                
+				<prompt>
+                    <id>DrinkType</id>
+                    <displayType>event</displayType>
+                    <displayLabel>Drink</displayLabel>
+	                <unit>Cup</unit>
+                    <promptText>What did you drink so far today?</promptText>
+                    <abbreviatedText>What did you drink so far today?</abbreviatedText>
+                    <promptType>multi_choice_custom</promptType>
+                    <properties>
+                        <property>
+                            <key>0</key>
+                            <label>Water</label>
+                        </property>
+                        <property>
+                            <key>1</key>
+                            <label>Coffee</label>
+                        </property>
+                        <property>
+                            <key>2</key>
+                            <label>Tea</label>
+                        </property>
+                        <property>
+                            <key>3</key>
+                            <label>Soda</label>
+                        </property>
+                        <property>
+                            <key>4</key>
+                            <label>Juice</label>
+                        </property>
+                        <property>
+                            <key>5</key>
+                            <label>Alcohol</label>
+                        </property>
+                        <property>
+                            <key>6</key>
+                            <label>Energy Drink</label>
+                        </property>
+                        <property>
+                            <key>7</key>
+                            <label>Don't remember</label>
+                        </property>
+                    </properties>
+                    <skippable>false</skippable>
+                </prompt>
+                <prompt>
+					<condition>(DrinkType != 7)</condition>
+					<id>drinkTime</id>
+					<displayType>metadata</displayType>
+					<displayLabel>Drinking Time</displayLabel>
+					<promptText>What time did you take this drink?</promptText>
+					<promptType>timestamp</promptType>
+					<skippable>true</skippable>
+					<skipLabel>Kind of hard to remeber, right?</skipLabel>
+				</prompt>
+				<prompt>
+					<condition>(DrinkType != 7)</condition>
+					<id>drinkTimeGuess</id>
+					<displayType>metadata</displayType>
+					<displayLabel>Drinking Time</displayLabel>
+					<promptText>Just give me a guess on when u drink that?</promptText>
+					<promptType>hours_before_now</promptType>
+					    <properties>
+                            <property>
+                                <key>min</key>
+                                <label>0</label>
+                            </property>
+                            <property>
+                                <key>max</key>
+                                <label>24</label>
+                            </property>
+                        </properties>
+					<skippable>false</skippable>
+				</prompt>
+				<prompt>
+					<condition>(DrinkType != 7) and (drinkTimeGuess &lt; 5)</condition>
+					<id>drinkPhoto</id>
+					<displayType>metadata</displayType>
+					<displayLabel>Drinking photo</displayLabel>
+					<promptText>Take a picture of your drink if you kept it</promptText>
+					<promptType>photo</promptType>
+					    <properties>
+                            <property>
+                                <key>res</key>
+                                <label>1024</label>
+                            </property>
+                        </properties>
+					<skippable>false</skippable>
+				</prompt>
+				<prompt>
+				    <id>weatherTemp</id>
+                    <displayType>measurement</displayType>
+                    <displayLabel>Temperature</displayLabel>
+	                <unit>F</unit>
+                    <promptText>What is the temperature right now?</promptText>
+                    <abbreviatedText>Current temperature</abbreviatedText>
+                    <promptType>number</promptType>
+                        <properties>
+                            <property>
+                                <key>min</key>
+                                <label>0</label>
+                            </property>
+                            <property>
+                                <key>max</key>
+                                <label>120</label>
+                            </property>
+                        </properties>
+                    <skippable>false</skippable>
+				</prompt>
+				<prompt>
+                    <id>weatherType</id>
+                    <displayType>event</displayType>
+                    <displayLabel>Weather Type</displayLabel>
+                    <promptText>What is the weather like today?</promptText>
+                    <abbreviatedText>What is the weather like today?</abbreviatedText>
+                    <promptType>single_choice_custom</promptType>
+                    <properties>
+                        <property>
+                            <key>0</key>
+                            <label>Sunny</label>
+                        </property>
+                        <property>
+                            <key>1</key>
+                            <label>Cloudy</label>
+                        </property>
+                        <property>
+                            <key>2</key>
+                            <label>Breezy</label>
+                        </property>
+                        <property>
+                            <key>3</key>
+                            <label>Drizzly</label>
+                        </property>
+                        <property>
+                            <key>4</key>
+                            <label>Foggy</label>
+                        </property>
+                        <property>
+                            <key>5</key>
+                            <label>Showery</label>
+                        </property>
+                        <property>
+                            <key>6</key>
+                            <label>Snowy</label>
+                        </property>
+                        <property>
+                            <key>7</key>
+                            <label>Thunder</label>
+                        </property>
+                    </properties>
+                    <skippable>false</skippable>
+                </prompt>
+                <prompt>
+				    <id>weatherFavor</id>
+				    <condition>((weatherTemp &gt; 65) and (weatherTemp &lt; 90)) or (weatherType == 0) </condition>
+                    <displayType>event</displayType>
+                    <displayLabel>Weather Favor</displayLabel>
+                    <promptText>Do you like today's weather?</promptText>
+                    <abbreviatedText>Like it or not?</abbreviatedText>
+                    <promptType>single_choice</promptType>
+                        <properties>
+                            <property>
+                                <key>0</key>
+                                <label>Yes</label>
+                            </property>
+                            <property>
+                                <key>1</key>
+                                <label>No</label>
+                            </property>
+                        </properties>
+                    <skippable>false</skippable>
+				</prompt>
+				<prompt>
+				    <id>moodType</id>
+                    <displayType>event</displayType>
+                    <displayLabel>Mood Type</displayLabel>
+                    <promptText>How do you feel today?</promptText>
+                    <abbreviatedText>How do you feel today?</abbreviatedText>
+                    <promptType>multi_choice</promptType>
+                    <properties>
+                        <property>
+                            <key>0</key>
+                            <label>Not bad</label>
+                        </property>
+                        <property>
+                            <key>1</key>
+                            <label>Good</label>
+                        </property>
+                        <property>
+                            <key>2</key>
+                            <label>Great</label>
+                        </property>
+                        <property>
+                            <key>3</key>
+                            <label>Awesome</label>
+                        </property>
+                        <property>
+                            <key>4</key>
+                            <label>Top of the hill</label>
+                        </property>
+                        <property>
+                            <key>5</key>
+                            <label>Bad</label>
+                        </property>
+                        <property>
+                            <key>6</key>
+                            <label>Sad</label>
+                        </property>
+                        <property>
+                            <key>7</key>
+                            <label>Worst of my life</label>
+                        </property>
+                    </properties>
+                    <skippable>false</skippable>
+				</prompt>
+				<prompt>
+				    <id>puzzle</id>
+				    <condition>(weatherType == 0)</condition>
+				    <displayType>event</displayType>
+                    <displayLabel>Question</displayLabel>
+                    <promptText>Do you kind which drink tells today's weather?</promptText>
+                    <abbreviatedText>Do you kind which drink tells today's weather?</abbreviatedText>
+                    <explanationText>Hint: There is a "D"</explanationText>
+                    <promptType>text</promptType>
+                    <properties>
+                        <property>
+                            <key>min</key>
+                            <label>1</label>
+                        </property>
+                        <property>
+                            <key>max</key>
+                            <label>20</label>
+                        </property>
+                    </properties>
+                    <skippable>false</skippable>
+				</prompt>
+				<prompt>
+					<id>AttentionGame</id>
+					<displayType>event</displayType>
+					<displayLabel>Attention Game</displayLabel>
+					<unit>Score</unit>
+					<promptText>Press the button below to play the game. To play, tap every letter except the letter 'X'.</promptText>
+					<abbreviatedText>Attention Game</abbreviatedText>
+					<promptType>remote_activity</promptType>
+					<properties>
+						<property>
+							<key>package</key>
+							<label>edu.ucla.cens.FocusGame</label>
+						</property>
+						<property>
+							<key>activity</key>
+							<label>edu.ucla.cens.FocusGame.Game</label>
+						</property>
+						<property>
+							<key>action</key>
+							<label>edu.ucla.cens.FocusGame.Game.LAUNCH</label>
+						</property>
+						<property>
+							<key>autolaunch</key>
+							<label>false</label>
+						</property>
+						<property>
+							<key>retries</key>
+							<label>10</label>
+						</property>
+						<property>
+							<key>min_runs</key>
+							<label>1</label>
+						</property>
+					</properties>
+					<skippable>true</skippable>
+					<skipLabel>Skip</skipLabel>
+				</prompt>
+            </contentList>
+            
+        </survey>
+    </surveys>
+</campaign>
