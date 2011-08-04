@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import urllib
 import pycurl
 import sys
@@ -14,7 +16,7 @@ class Test:
     def update(self):
         self.cont_dict = ast.literal_eval(self.contents)
 
-pass_in = {'user':'ohmage.luo', 'password':'eihuhaij.q', 'client':'curl'}
+pass_in = {'user':'ohmage.luo', 'password':'eihuhaij', 'client':'curl'}
 
 URL = "https://dev1.mobilizingcs.org"
 
@@ -33,4 +35,9 @@ t.update()
 # print out the infomation contains in Curl
 print '\n****************************\n'
 print t.contents
-print t.cont_dict
+print (t.cont_dict)['errors']
+print (t.cont_dict)['errors'][0]['code']
+print type(t.cont_dict['errors'])
+print type(t.cont_dict['errors'][0]['code'])
+
+
