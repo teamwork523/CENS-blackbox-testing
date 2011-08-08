@@ -36,6 +36,8 @@ DOC_FILE='./test_file/test.doc'
 EXE_FILE='./test_file/test'
 XML_FILE_DUP='./test_file/xml/test_dup.xml'
 XML_FILE_SAME_URN='./test_file/xml/test_urn_same.xml'
+RAND_STR='<>?:_+{}|,./;'
+MISS=0
 
 # Error Summary
 ERROR = {'0200': 'Authentication failed',\

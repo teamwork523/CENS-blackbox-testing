@@ -14,9 +14,10 @@ class Test:
         self.contents = self.contents + buf
     
     def update(self):
-        self.cont_dict = ast.literal_eval(self.contents)
+        if self.contents != '':
+            self.cont_dict = ast.literal_eval(self.contents)
 
-pass_in = {'user':'ohmage.luo', 'password':'eihuhaij', 'client':'curl'}
+pass_in = {'user':'a'*130000, 'password':'eihuhaij'}
 
 URL = "https://dev1.mobilizingcs.org"
 
@@ -29,16 +30,17 @@ c.setopt(c.POSTFIELDS, urllib.urlencode(pass_in))
 c.setopt(c.WRITEFUNCTION, t.body_callback)
 #c.setopt(c.VERBOSE, 1)
 c.perform()
+print t.contents
+print c.getinfo(pycurl.HTTP_CODE)
 c.close()
 t.update()
 
 # print out the infomation contains in Curl
-print '\n****************************\n'
-print t.contents
-print (t.cont_dict)['errors']
-print (t.cont_dict)['errors'][0]['code']
-print type(t.cont_dict['errors'])
-print type(t.cont_dict['errors'][0]['code'])
-print urllib.urlencode(pass_in)
+
+# print (t.cont_dict)['errors']
+# print (t.cont_dict)['errors'][0]['code']
+# print type(t.cont_dict['errors'])
+# print type(t.cont_dict['errors'][0]['code'])
+# print urllib.urlencode(pass_in)
 
 
