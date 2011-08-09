@@ -1,11 +1,14 @@
 #!/usr/bin/python
 
+# This is a auth_token API black box testing file
+# If any spec changes on the limit of argument,
+# please only modify the constant variables below
+
 import sys
 import httpResponse as HTTP
 import globConst as gconst
 
 # the boundary length for each argument
-# modify if changes apply
 USER_LIMIT = 15
 PASSWORD_LIMIT = 100 
 CLIENT_LIMIT = 250
@@ -26,8 +29,8 @@ class authToken_test:
         self.arg = {'user': [gconst.USERNAME, gconst.MISS, '', gconst.RAND_STR, 'a'*USER_LIMIT, 'a'*(USER_LIMIT+1), 'user1'],\
                     'password': [gconst.PASSWORD, gconst.MISS, '', gconst.RAND_STR, 'a'*PASSWORD_LIMIT, 'a'*(PASSWORD_LIMIT+1), 'password1'],\
                     'client': ['curl', '', 'a'*CLIENT_LIMIT, gconst.MISS, 'a'*(CLIENT_LIMIT+1), 'client1']}
-        self.arg_msg = {'user': ['v', 404, '0200', '0200', '0200', 404, 404],\
-                        'password': ['v', 404, '0200', '0200', '0200', 404, 404],\
+        self.arg_msg = {'user': ['v', 404, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, 404, 404],\
+                        'password': ['v', 404, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, 404, 404],\
                         'client': ['v', 'v', 'v', 404, 404, 404]}
         self.http = HTTP.http_res()
         self.http.set_url(self.host+gconst.AUTH_TOKEN)
@@ -51,7 +54,7 @@ class authToken_test:
             return 'v'      # if all arguments are valid, then it is a valid case
         if arg_list.count(404) > 0:
             return 404      # if any of the arguments msg is 404, then result is 404
-        return '0200'
+        return gconst.AUTH_FAIL
         
     def blackbox_test(self):
         # All the combination of test cases
@@ -120,10 +123,10 @@ class authToken_test:
                                                    'A'+str(self.total_case),\
                                                    self.arg_pass_in,\
                                                    '404 NOT FOUND')
-                    elif exp_result == '0200':
+                    elif exp_result == gconst.AUTH_FAIL:
                         if (self.http.http_code != 200) or \
                            (self.http.cont_dict['result'] != 'failure') or \
-                           (self.http.cont_dict['errors'][0]['code'] != '0200'):
+                           (self.http.cont_dict['errors'][0]['code'] != gconst.AUTH_FAIL):
                             HTTP.write_err_report(self.err_report,\
                                                   'A'+str(self.total_case),\
                                                   self.arg_pass_in,\

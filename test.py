@@ -17,11 +17,14 @@ class Test:
         if self.contents != '':
             self.cont_dict = ast.literal_eval(self.contents)
 
-pass_in = {'user':'a'*130000, 'password':'eihuhaij'}
+pass_in = {'auth_token':'a'*2096989,\
+           'client':'curl',\
+           'campaign_urn_list':'urn:campaign:ca',\
+           'class_urn_list':'urn:class:ca:ucla:Mobilize:Test:2011'}
 
 URL = "https://dev1.mobilizingcs.org"
 
-test_URL = "/app/user/auth_token"
+test_URL = "/app/user/read"
 
 t = Test()
 c = pycurl.Curl()

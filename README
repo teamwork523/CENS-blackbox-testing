@@ -1,3 +1,22 @@
-The black box testing project for CENS AndWellness or Moblizing server. All testing scripts or other source code live in this repo.
+The black box testing project for CENS AndWellness or Moblizing server. 
+All testing scripts or other source code live in this repo.
+
+Here are things you need to know for this black testing program:
+1. This is a testing project for CENS Moblizing and AndWellness server.
+2. If any changes happen on the error code or length limit for parameters of APIs,
+   please change it before running the program.
+3. The general strategy for this automatic testing program is focus on three part:
+   (I) Valid Cases
+   (II) Invalid Cases with one invalid argument
+   (III) Invalid Cases with two invalid arguments
+   The reason I did not continue on three or more invalid arguments is that our
+   server has a build-in ordering for checking all the parameters. Once it meets
+   an invalid argument in that order, it return the corresponding error code.
+   Since the two arguments checking already tests the ordering that server
+   checks the request, we do not need to combine more invalid arguments.
+   Another reason we stop at two invalid arguments is that if we include all the
+   test cases in our program, then the running time for each API could be more
+   than a day or longer. Considering efficiency issue, we only check the three
+   types of cases as stated above.
 
 If you have any question, please contact uclakun@ucla.edu or Fayland@ucla.edu

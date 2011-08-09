@@ -40,9 +40,15 @@ RAND_STR='<>?:_+{}|,./;'
 MISS=0
 
 # Error Summary
-ERROR = {'0200': 'Authentication failed',\
-         '0807': 'invalid campaign URN list or invalid URN in list',\
-         '0816': 'User is not a supervisor in all the campaigns in the list.',\
+# Here is a complete definition for error code and variables refering them
+# Version of 2.6
+AUTH_FAIL = '0200'
+INVALID_CAMP_URN = '0700'
+NOT_SUP_IN_CAMP = '0708'
+
+ERROR = {AUTH_FAIL: 'Authentication failed',\
+         INVALID_CAMP_URN: 'invalid campaign URN list or invalid URN in list',\
+         NOT_SUP_IN_CAMP: 'User is not a supervisor in all the campaigns in the list.',\
          }
 
 
