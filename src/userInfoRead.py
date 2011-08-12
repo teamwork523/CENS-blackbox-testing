@@ -29,10 +29,8 @@ class userInfoRead_test:
         # use another dictionary to indicate whether it is valid or error
         # both dictionary are one to one corresponding
         self.arg = {'user': [gconst.USERNAME, gconst.MISS, '', gconst.RAND_STR, 'a'*USER_LIMIT, 'a'*(USER_LIMIT+1), 'user1'],\
-                    'password': [gconst.PASSWORD, gconst.MISS, '', gconst.RAND_STR, 'a'*PASSWORD_LIMIT, 'a'*(PASSWORD_LIMIT+1), 'password1'],\
                     'client': ['curl', '', 'a'*CLIENT_LIMIT, gconst.MISS, 'a'*(CLIENT_LIMIT+1), 'client1']}
         self.arg_msg = {'user': ['v', 404, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, 404, 404],\
-                        'password': ['v', 404, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, 404, 404],\
                         'client': ['v', 'v', 'v', 404, 404, 404]}
         self.http = HTTP.http_res()
         self.http.set_url(self.host+gconst.AUTH_TOKEN)
