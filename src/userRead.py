@@ -9,11 +9,16 @@ import httpResponse as HTTP
 import globConst as gconst
 
 # the boundary length for each argument
-# TODO: change the limit
-TOKEN_LIMIT = 130858
-CLIENT_LIMIT = 130784
-CAMP_LIMIT = 130922
-CLS_LIMIT = 130835
+TOKEN_LIMIT = 2000 # 2097000
+CLIENT_LIMIT = 2000 # 2096000
+CAMP_LIMIT = 2000 # 2097000
+CLS_LIMIT = 2000 # 2096000
+# boundary + INCR = 404 NOT FOUND
+# Add cases when you want to test this
+# Currently we disable this, because too large boundary hurts performance
+INCR = 2000
+# Total numbe of cases for User Read API
+TOTAL_CASE = 75 + 515
 
 # Testing class for User Read API
 class userRead_test:
@@ -25,17 +30,32 @@ class userRead_test:
         else:
             print >> sys.stderr, 'Error: Invalid host URL'
             sys.exit(1)
+        # Get the authentication token
+        self.TOKEN = HTTP.get_token(self.host, gconst.USERNAME, gconst.PASSWORD)
         # use one dictionary to construct all the test cases arguments
         # use another dictionary to indicate whether it is valid or error
         # both dictionary are one to one corresponding
-        self.arg = {'auth_token': [gconst.USERNAME, gconst.MISS, '', gconst.RAND_STR, 'a'*USER_LIMIT, 'a'*(USER_LIMIT+1), 'user1'],\
-                    'client': ['curl', '', 'a'*CLIENT_LIMIT, gconst.MISS, 'a'*(CLIENT_LIMIT+1), 'client1'],\
-                    'campaign_urn_list': []}
-        self.arg_msg = {'auth_token	': ['v', 404, '0200', '0200', '0200', 404, 404],\
-                        'password': ['v', 404, '0200', '0200', '0200', 404, 404],\
-                        'client': ['v', 'v', 'v', 404, 404, 404]}
+        self.valid_arg = {'auth_token': [self.TOKEN],\
+                          'client': ['curl', '', 'a'*CLIENT_LIMIT],\
+                          'campaign_urn_list': ['', gconst.MISS, gconst.CAMP_URN, gconst.CAMP_URN_LIST_COMMA, 'campaign_urn_list1'],\
+                          'class_urn_list': ['', gconst.MISS, gconst.CLS_URN, gconst.CLS_URN_LIST_COMMA, 'class_urn_list1']}
+        self.valid_arg_msg = {'auth_token': ['v'],\
+                              'client': ['v', 'v', 'v'],\
+                              'campaign_urn_list': ['v', 'v', 'v', 'v', 'v'],\
+                              'class_urn_list': ['v', 'v', 'v', 'v', 'v']}
+        # TODO: add 'a'*(CLIENT_LIMIT+INCR), 'a'*(CAMP_LIMIT+INCR), 'a'*(CLS_LIMIT+INCR) when you have reasonable limit
+        self.invalid_arg = {'auth_token': [gconst.MISS, '', gconst.RAND_STR, 'a'*TOKEN_LIMIT, 'auth_token1'],\
+                            'client': [gconst.MISS, 'client1'],\
+                            'campaign_urn_list': [gconst.RAND_STR, gconst.CAMP_URN_CAP, 'a'*CAMP_LIMIT],\
+                            'class_urn_list': [gconst.RAND_STR, gconst.CLS_URN_CAP, 'a'*CLS_LIMIT]}
+        # TODO: add 404 for 'client', 'campaign_urn_list' and 'class_urn_list' when you have reasonable limit
+        self.invalid_arg_msg = {'auth_token': [gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL],\
+                                'client': [404, 404],\
+                                'campaign_urn_list': [gconst.INVALID_CAMP_URN, gconst.NO_PERM_IN_CAMP, gconst.INVALID_CAMP_URN],\
+                                'class_urn_list': [gconst.INVALID_CLS_URN, gconst.NO_PERM_IN_CLS, gconst.INVALID_CLS_URN]}
+        self.para_name_list = ['auth_token', 'client', 'campaign_urn_list', 'class_urn_list']
         self.http = HTTP.http_res()
-        self.http.set_url(self.host+gconst.AUTH_TOKEN)
+        self.http.set_url(self.host+gconst.USER_READ)
         self.arg_pass_in = {}
         self.arg_pass_in_msg = []
         self.total_case = 0             # keep track of the total number of test cases
@@ -49,3 +69,282 @@ class userRead_test:
                                         # Failed/Passed: Response: {Json response}
                                         # Failed/Passed: Expectation: 'expected result detail'
                                         # **************************************************
+                                        
+    def result_det(self, arg_list):
+        # determine the result of expected response
+        # The checking order is the same as that of the server
+        # 404 > AUTH_FAIL > CAMP > CLS
+        if arg_list.count('v') == len(arg_list):
+            return 'v'
+        if arg_list.count(404) > 0:
+            return 404
+        if arg_list.count(gconst.AUTH_FAIL) > 0:
+            return gconst.AUTH_FAIL
+        if arg_list.count(gconst.INVALID_CAMP_URN) > 0:
+            return gconst.INVALID_CAMP_URN
+        if arg_list.count(gconst.NO_PERM_IN_CAMP) > 0:
+            return gconst.NO_PERM_IN_CAMP
+        if arg_list.count(gconst.INVALID_CLS_URN) > 0:
+            return gconst.INVALID_CLS_URN
+        return gconst.NO_PERM_IN_CLS
+        
+    def update_arg_pass_in(self, arg, value, flag):
+        # a helper function to update the self.arg_pass_in
+        # flag = 0 indicate add one argument
+        # flag = 1 indicate remove one argument
+        if flag == 0:
+            if value == 'auth_token1':
+                self.arg_pass_in[value] = self.TOKEN
+            elif value == 'client1':
+                self.arg_pass_in[value] = 'curl'
+            elif value == 'campaign_urn_list1':
+                self.arg_pass_in[value] = gconst.CAMP_URN
+            elif value == 'class_urn_list1':
+                self.arg_pass_in[value] = gconst.CLS_URN
+            elif value != gconst.MISS:
+                self.arg_pass_in[arg] = value
+        elif flag == 1:
+            if value == 'auth_token1' or value == 'client1' or \
+               value == 'campaign_urn_list1' or value == 'class_urn_list1':
+                del self.arg_pass_in[value]
+            elif value != gconst.MISS:
+                del self.arg_pass_in[arg]
+        else:
+            print >> sys.stderr, 'Error: Invalid update argument flag'
+            sys.exit(1)
+        
+    def blackbox_test(self):
+        # Combination of three kinds of test cases defined in README
+        # Special cases for 'Wrong argument name' and 'Missing Argument'
+        # Part I: Valid Case
+        for a in self.valid_arg['auth_token']:
+            self.arg_pass_in = {}
+            self.arg_pass_in_msg = []
+            self.arg_pass_in['auth_token'] = a
+            self.arg_pass_in_msg.append(self.valid_arg_msg['auth_token'][0])
+            for clt in self.valid_arg['client']:
+                self.arg_pass_in['client'] = clt
+                self.arg_pass_in_msg.append(self.valid_arg_msg['client'][self.valid_arg['client'].index(clt)])
+                for camp in self.valid_arg['campaign_urn_list']:
+                    self.update_arg_pass_in('campaign_urn_list', camp, 0)
+                    self.arg_pass_in_msg.append(self.valid_arg_msg['campaign_urn_list'][self.valid_arg['campaign_urn_list'].index(camp)])
+                    for cls in self.valid_arg['class_urn_list']:
+                        self.update_arg_pass_in('class_urn_list', cls, 0)
+                        self.arg_pass_in_msg.append(self.valid_arg_msg['class_urn_list'][self.valid_arg['class_urn_list'].index(cls)])
+                        # Determine the expected result
+                        exp_result = self.result_det(self.arg_pass_in_msg)
+                        # HTTP request part
+                        # Increment the total and invalid cases at the same time
+                        self.http.set_pass_in(self.arg_pass_in)
+                        self.http.request(0)
+                        self.total_case = self.total_case + 1
+                        # Print status
+                        print 'Processing Case ID {0}.\n{1}% to finish User Read API.'.format('UR'+str(self.total_case), self.total_case*100/TOTAL_CASE)
+                        # Check the response
+                        if exp_result == 'v':
+                            if (self.http.http_code != 200) or (self.http.cont_dict['result'] != 'success'):
+                                HTTP.write_err_report(self.err_report,\
+                                                      'UR'+str(self.total_case),\
+                                                      self.arg_pass_in,\
+                                                      self.http.contents,\
+                                                      '{"result": "success", "data":...}')
+                                # increment the invalid case id list and unexpected case counter
+                                self.invalid_case_id_list.append('UR'+str(self.total_case))
+                                self.unexpect_case = self.unexpect_case + 1
+                            else:
+                                HTTP.write_succ_report(self.succ_report,\
+                                                       'UR'+str(self.total_case),\
+                                                       self.arg_pass_in,\
+                                                       self.http.contents)
+                        else:
+                            print >> sys.stderr, 'Error: Invalid valid test case'
+                            sys.exit(1)
+                        # update arg_pass_in and arg_pass_in_msg
+                        self.update_arg_pass_in('class_urn_list', cls, 1)
+                        self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
+                    # update arg_pass_in and arg_pass_in_msg
+                    self.update_arg_pass_in('campaign_urn_list', camp, 1)
+                    self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
+                # update arg_pass_in and arg_pass_in_msg
+                del self.arg_pass_in['client']
+                self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)         
+            # update arg_pass_in and arg_pass_in_msg
+            del self.arg_pass_in['auth_token']
+            self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
+  
+        ########################################################################
+        ########################################################################    
+        # Part II: Invalid case with one invalid argument
+        for para in self.para_name_list:
+            index = self.para_name_list.index(para)
+            # each turn pick one as invalid argument
+            self.para_name_list.remove(para)
+            arg1 = para                         # invalid arg
+            arg2 = self.para_name_list[0]       # valid arg   
+            arg3 = self.para_name_list[1]       # valid arg
+            arg4 = self.para_name_list[2]       # valid arg
+            # Add arg 1
+            for a1 in self.invalid_arg[arg1]:
+                self.arg_pass_in = {}
+                self.arg_pass_in_msg = []
+                self.update_arg_pass_in(arg1, a1, 0)
+                self.arg_pass_in_msg.append(self.invalid_arg_msg[arg1][self.invalid_arg[arg1].index(a1)])
+                # Add arg 2
+                for a2 in self.valid_arg[arg2]:
+                    self.update_arg_pass_in(arg2, a2, 0)
+                    self.arg_pass_in_msg.append(self.valid_arg_msg[arg2][self.valid_arg[arg2].index(a2)])
+                    # Add arg 3
+                    for a3 in self.valid_arg[arg3]:
+                        self.update_arg_pass_in(arg3, a3, 0)
+                        self.arg_pass_in_msg.append(self.valid_arg_msg[arg3][self.valid_arg[arg3].index(a3)])
+                        # Add arg 4
+                        for a4 in self.valid_arg[arg4]:
+                            self.update_arg_pass_in(arg4, a4, 0)
+                            self.arg_pass_in_msg.append(self.valid_arg_msg[arg4][self.valid_arg[arg4].index(a4)])
+                            # Result determine
+                            exp_result = self.result_det(self.arg_pass_in_msg)
+                            # HTTP request
+                            # Increment the total and invalid cases at the same time
+                            self.http.set_pass_in(self.arg_pass_in)
+                            self.http.request(0)
+                            self.total_case = self.total_case + 1
+                            print 'Processing Case ID {0}.\n{1}% to finish User Read API.'.format('UR'+str(self.total_case), self.total_case*100/TOTAL_CASE)
+                            # result check
+                            if exp_result == gconst.AUTH_FAIL:
+                                if (self.http.http_code != 200) or \
+                                   (self.http.cont_dict['result'] != 'failure') or \
+                                   (self.http.cont_dict['errors'][0]['code'] != gconst.AUTH_FAIL):
+                                    HTTP.write_err_report(self.err_report,\
+                                                         'UR'+str(self.total_case),\
+                                                         self.arg_pass_in,\
+                                                         self.http.contents,\
+                                                         gconst.AUTH_FAIL+': '+gconst.ERROR[gconst.AUTH_FAIL])
+                                    # increment the invalid case id list and unexpected case counter
+                                    self.invalid_case_id_list.append('UR'+str(self.total_case))
+                                    self.unexpect_case = self.unexpect_case + 1
+                                else:
+                                    HTTP.write_succ_report(self.succ_report,\
+                                                           'UR'+str(self.total_case),\
+                                                           self.arg_pass_in,\
+                                                           self.http.contents)
+                            elif exp_result == 404:
+                                if self.http.http_code != 404:
+                                    HTTP.write_err_report(self.err_report,\
+                                                          'UR'+str(self.total_case),\
+                                                          self.arg_pass_in,\
+                                                          self.http.contents,\
+                                                          '404 NOT FOUND')
+                            # increment the invalid case id list and unexpected case counter
+                                    self.invalid_case_id_list.append('UR'+str(self.total_case))
+                                    self.unexpect_case = self.unexpect_case + 1
+                                else:
+                                    HTTP.write_succ_report(self.succ_report,\
+                                                           'UR'+str(self.total_case),\
+                                                           self.arg_pass_in,\
+                                                           '404 NOT FOUND')
+                            elif exp_result == gconst.NO_PERM_IN_CAMP:
+                                if (self.http.http_code != 200) or \
+                                   (self.http.cont_dict['result'] != 'failure') or \
+                                   (self.http.cont_dict['errors'][0]['code'] != gconst.NO_PERM_IN_CAMP):
+                                    HTTP.write_err_report(self.err_report,\
+                                                         'UR'+str(self.total_case),\
+                                                         self.arg_pass_in,\
+                                                         self.http.contents,\
+                                                         gconst.NO_PERM_IN_CAMP+': '+gconst.ERROR[gconst.NO_PERM_IN_CAMP])
+                                    # increment the invalid case id list and unexpected case counter
+                                    self.invalid_case_id_list.append('UR'+str(self.total_case))
+                                    self.unexpect_case = self.unexpect_case + 1
+                                else:
+                                    HTTP.write_succ_report(self.succ_report,\
+                                                           'UR'+str(self.total_case),\
+                                                           self.arg_pass_in,\
+                                                           self.http.contents)
+                            elif exp_result == gconst.INVALID_CAMP_URN:
+                                if (self.http.http_code != 200) or \
+                                   (self.http.cont_dict['result'] != 'failure') or \
+                                   (self.http.cont_dict['errors'][0]['code'] != gconst.INVALID_CAMP_URN):
+                                    HTTP.write_err_report(self.err_report,\
+                                                         'UR'+str(self.total_case),\
+                                                         self.arg_pass_in,\
+                                                         self.http.contents,\
+                                                         gconst.INVALID_CAMP_URN+': '+gconst.ERROR[gconst.INVALID_CAMP_URN])
+                                    # increment the invalid case id list and unexpected case counter
+                                    self.invalid_case_id_list.append('UR'+str(self.total_case))
+                                    self.unexpect_case = self.unexpect_case + 1
+                                else:
+                                    HTTP.write_succ_report(self.succ_report,\
+                                                           'UR'+str(self.total_case),\
+                                                           self.arg_pass_in,\
+                                                           self.http.contents)
+                            elif exp_result == gconst.INVALID_CLS_URN:
+                                if (self.http.http_code != 200) or \
+                                   (self.http.cont_dict['result'] != 'failure') or \
+                                   (self.http.cont_dict['errors'][0]['code'] != gconst.INVALID_CLS_URN):
+                                    HTTP.write_err_report(self.err_report,\
+                                                         'UR'+str(self.total_case),\
+                                                         self.arg_pass_in,\
+                                                         self.http.contents,\
+                                                         gconst.INVALID_CLS_URN+': '+gconst.ERROR[gconst.INVALID_CLS_URN])
+                                    # increment the invalid case id list and unexpected case counter
+                                    self.invalid_case_id_list.append('UR'+str(self.total_case))
+                                    self.unexpect_case = self.unexpect_case + 1
+                                else:
+                                    HTTP.write_succ_report(self.succ_report,\
+                                                           'UR'+str(self.total_case),\
+                                                           self.arg_pass_in,\
+                                                           self.http.contents)
+                            elif exp_result == gconst.NO_PERM_IN_CLS:
+                                if (self.http.http_code != 200) or \
+                                   (self.http.cont_dict['result'] != 'failure') or \
+                                   (self.http.cont_dict['errors'][0]['code'] != gconst.NO_PERM_IN_CLS):
+                                    HTTP.write_err_report(self.err_report,\
+                                                         'UR'+str(self.total_case),\
+                                                         self.arg_pass_in,\
+                                                         self.http.contents,\
+                                                         gconst.NO_PERM_IN_CLS+': '+gconst.ERROR[gconst.NO_PERM_IN_CLS])
+                                    # increment the invalid case id list and unexpected case counter
+                                    self.invalid_case_id_list.append('UR'+str(self.total_case))
+                                    self.unexpect_case = self.unexpect_case + 1
+                                else:
+                                    HTTP.write_succ_report(self.succ_report,\
+                                                           'UR'+str(self.total_case),\
+                                                           self.arg_pass_in,\
+                                                           self.http.contents)
+                            else:
+                                print >> sys.stderr, 'Error: Unexpected single argument invalid test case'
+                                sys.exit(1)
+                            # update arg_pass_in and arg_pass_in_msg
+                            self.update_arg_pass_in(arg4, a4, 1)
+                            self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
+                        # update arg_pass_in and arg_pass_in_msg
+                        self.update_arg_pass_in(arg3, a3, 1)
+                        self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
+                    # update arg_pass_in and arg_pass_in_msg
+                    self.update_arg_pass_in(arg2, a2, 1)
+                    self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
+                # update arg_pass_in and arg_pass_in_msg
+                self.update_arg_pass_in(arg1, a1, 1)
+                self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
+            # restore the para_name_list
+            self.para_name_list.insert(index, para)
+            
+        ########################################################################
+        ########################################################################    
+        # Part III: Invalid case with two invalid arguments
+        
+ur = userRead_test('mob')
+ur.blackbox_test()
+
+print "\nError Report"
+for x in ur.err_report:
+    print x
+
+print "Summary Section"
+print "Total number of cases expected {0}".format(TOTAL_CASE)
+print "Total number of cases: {0}".format(ur.total_case)
+print "Invalid cases: {0}".format(ur.unexpect_case)
+print "Invalid case list: {0}".format(ur.invalid_case_id_list)
+                
+        
+        
+        

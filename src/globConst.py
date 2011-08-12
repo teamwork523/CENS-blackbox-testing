@@ -22,7 +22,7 @@ CAMP_URN_SPACE='urn :campaign:ca:ucla:Mobilize:May:2011:Advertisement'
 CAMP_URN_UNDERLINE='_urn:campaign:ca:ucla:Mobilize:May:2011:Advertisement'
 CAMP_URN_LIST='urn:campaign:ca:ucla:Mobilize:May:2011:Advertisement,urn:campaign:ca:ucla:Mobilize:May:2011:Sleep,urn:campaign:ca:ucla:Mobilize:May:2011:Snack'
 CAMP_URN_LIST_CAP='"urn:CAMPAIGN:ca:ucla:Mobilize:May:2011:ADVERTISEMENT,urn:campaign:ca:ucla:Mobilize:May:2011:Sleep,urn:campaign:ca:ucla:Mobilize:May:2011:Snack"';
-CAMP_URN_LIST_COMMA=',,,urn:class:ca:ucla:Mobilize:Test:2011,,,urn:class:ca:ucla:Mobilize:Test:2011,,,,,'
+CAMP_URN_LIST_COMMA=',,,urn:campaign:ca:ucla:Mobilize:July:2011:Test,,,urn:campaign:ca:ucla:Mobilize:July:2011:Test,,,,,'
 CAMP_URN_LIST_TEST_DUP='urn:campaign:ca:ucla:Mobilize:July:2011:Test,urn:campaign:ca:ucla:Mobilize:July:2011:Test'
 CLS_URN='urn:class:ca:ucla:Mobilize:Test:2011'
 CLS_URN_CAP='URN:class:ca:ucla:Mobilize:Test:2011'
@@ -41,14 +41,19 @@ MISS=0
 
 # Error Summary
 # Here is a complete definition for error code and variables refering them
-# Version of 2.6
+# Server Version of 2.5
+# Edit the part below before running the code
 AUTH_FAIL = '0200'
-INVALID_CAMP_URN = '0700'
-NOT_SUP_IN_CAMP = '0708'
+INVALID_CAMP_URN = '0807' # '0700'
+NO_PERM_IN_CAMP = '0816' # '0707'
+INVALID_CLS_URN = '1204' # '0900'
+NO_PERM_IN_CLS = '1207' # '0905'
 
 ERROR = {AUTH_FAIL: 'Authentication failed',\
-         INVALID_CAMP_URN: 'invalid campaign URN list or invalid URN in list',\
-         NOT_SUP_IN_CAMP: 'User is not a supervisor in all the campaigns in the list.',\
+         INVALID_CAMP_URN: 'Invalid campaign URN list or invalid URN in list',\
+         NO_PERM_IN_CAMP: 'No permission to access all the campaigns in the list.',\
+         INVALID_CLS_URN: 'Invalid class URN list or invalid URN in list',\
+         NO_PERM_IN_CLS: 'No permission to access all the classes in the list.'
          }
 
 

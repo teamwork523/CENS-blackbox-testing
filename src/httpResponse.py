@@ -7,9 +7,9 @@ import ast  # convert string to dictionary
 import globConst as gconst
 
 # a function geting the authentication token
-def get_token(username, password):
+def get_token(host, username, password):
     token = http_res()
-    token.set_url(gconst.WELL+gconst.AUTH_TOKEN)
+    token.set_url(host+gconst.AUTH_TOKEN)
     token.set_pass_in({'user': username, 'password': password, 'client': 'curl'})
     token.request(0)
     return token.cont_dict['token']
@@ -68,20 +68,25 @@ class http_res:
     # file_up is a flag indicating whether we need to upload a file or not
     # file_up = 0 means no uploading file
     # file_up = 1 means need to upload a file
-        self.contents = ''
-        self.cont_dict = {}      
-        curl = pycurl.Curl()
-        curl = pycurl.Curl()
-        curl.setopt(curl.URL, self.url)
-        if (file_up == 0):
-            curl.setopt(curl.POSTFIELDS, urllib.urlencode(self.pass_in))
-        else:
-            curl.setopt(curl.HTTPPOST, self.pass_in_with_file)
-        curl.setopt(curl.WRITEFUNCTION, self.write_callback)
-        curl.perform()
-        self.http_code = curl.getinfo(pycurl.HTTP_CODE)     # get http response status
-        curl.close()
-        self.convert_to_dict()
+        try:
+            self.contents = ''
+            self.cont_dict = {}      
+            curl = pycurl.Curl()
+            curl = pycurl.Curl()
+            curl.setopt(curl.URL, self.url)
+            if (file_up == 0):
+                curl.setopt(curl.POSTFIELDS, urllib.urlencode(self.pass_in))
+            else:
+            # Hint for future: use zip(dict.keys(), dict.values())
+            # can directly form a list of tuples
+                curl.setopt(curl.HTTPPOST, self.pass_in_with_file)
+            curl.setopt(curl.WRITEFUNCTION, self.write_callback)
+            curl.perform()
+            self.http_code = curl.getinfo(pycurl.HTTP_CODE)     # get http response status
+            curl.close()
+            self.convert_to_dict()
+        except pycurl.error as (errno, strerror):
+            print "pycurl error({0}): {1}".format(errno, strerror)
         
         
         

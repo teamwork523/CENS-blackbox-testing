@@ -17,10 +17,10 @@ class Test:
         if self.contents != '':
             self.cont_dict = ast.literal_eval(self.contents)
 
-pass_in = {'auth_token':'a'*2096989,\
+pass_in = {'auth_token': '8c91d05d-5d35-4aa5-8cb8-772665649923',\
            'client':'curl',\
            'campaign_urn_list':'urn:campaign:ca',\
-           'class_urn_list':'urn:class:ca:ucla:Mobilize:Test:2011'}
+           'class_urn_list':'a'*2096000}
 
 URL = "https://dev1.mobilizingcs.org"
 

@@ -12,6 +12,7 @@ import globConst as gconst
 USER_LIMIT = 15
 PASSWORD_LIMIT = 100 
 CLIENT_LIMIT = 250
+TOTAL_CASE = 294
 
 # Testing class for authentication token API
 class authToken_test:
@@ -88,11 +89,12 @@ class authToken_test:
                     # check for the expected
                     exp_result = self.result_det(self.arg_pass_in_msg)
                     # HTTP request part
-                    # Don't forget counting for cases
+                    # Increment the total and invalid cases at the same time
                     self.http.set_pass_in(self.arg_pass_in)
                     self.http.request(0)
                     self.total_case = self.total_case + 1
-                    print 'Processing Case ID {0}'.format('A'+str(self.total_case))
+                    # Print status
+                    print 'Processing Case ID {0}.\n{1}% to finish auth_token API.'.format('A'+str(self.total_case), self.total_case*100/TOTAL_CASE)
                     if exp_result == 'v':
                         if (self.http.http_code != 200) or (self.http.cont_dict['result'] != 'success'):
                             HTTP.write_err_report(self.err_report,\
@@ -131,7 +133,7 @@ class authToken_test:
                                                   'A'+str(self.total_case),\
                                                   self.arg_pass_in,\
                                                   self.http.contents,\
-                                                  '404 NOT FOUND')
+                                                  gconst.AUTH_FAIL+': '+gconst.ERROR[gconst.AUTH_FAIL])
                             # increment the invalid case id list and unexpected case counter
                             self.invalid_case_id_list.append('A'+str(self.total_case))
                             self.unexpect_case = self.unexpect_case + 1
