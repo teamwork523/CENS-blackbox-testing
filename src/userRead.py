@@ -4,8 +4,10 @@
 # If any spec changes on the limit of argument,
 # please only modify the constant variables below
 ########################################
-# Testing time Approximation: 16min30sec
+# Testing time Approximation: 16min27sec
 ########################################
+# TODO: need to create class with URN "urn:class:ca:ucla:Mobilize:Test:2011"
+#       in order to allow AndWellness server to pass the test cases
 
 import sys
 import httpResponse as HTTP
@@ -495,7 +497,7 @@ class userRead_test:
             # restore the para_name_list
             self.para_name_list.insert(index1, arg1)
         
-ur = userRead_test('and')
+ur = userRead_test('mob')
 ur.blackbox_test()
 
 print "\nError Report"

@@ -4,7 +4,7 @@
 # If any spec changes on the limit of argument,
 # please only modify the constant variables below
 #######################################
-# Testing time Approximation: 2min30sec
+# Testing time Approximation: 3min30sec
 #######################################
 
 import sys
@@ -167,7 +167,7 @@ class authToken_test:
                 del self.arg_pass_in['user']
             self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
         
-a = authToken_test('mob')
+a = authToken_test('and')
 a.blackbox_test()
 print "Error Report:"
 for x in a.err_report:
