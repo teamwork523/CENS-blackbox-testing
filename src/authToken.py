@@ -3,6 +3,9 @@
 # This is a auth_token API black box testing file
 # If any spec changes on the limit of argument,
 # please only modify the constant variables below
+#######################################
+# Testing time Approximation: 2min30sec
+#######################################
 
 import sys
 import httpResponse as HTTP

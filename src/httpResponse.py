@@ -3,7 +3,7 @@
 import urllib
 import pycurl
 import sys
-import ast  # convert string to dictionary
+import simplejson as json
 import globConst as gconst
 
 # a function geting the authentication token
@@ -47,9 +47,12 @@ class http_res:
         self.contents = self.contents + buf
     
     def convert_to_dict(self):
-    # convert reponse string to a dictionary
-        if self.contents != '':
-            self.cont_dict = ast.literal_eval(self.contents)
+    # convert reponse string to a dictionary through simplejson decoder
+        try:
+            if self.contents != '':
+                self.cont_dict = json.loads(self.contents)
+        except ValueError as valudErr:
+            print "Value error {0}".format(valudErr)
     
     def set_pass_in(self, para):
     # assign the new parameters for a new turn of http request

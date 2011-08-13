@@ -3,6 +3,9 @@
 # This is a user_read API black box testing file
 # If any spec changes on the limit of argument,
 # please only modify the constant variables below
+########################################
+# Testing time Approximation: 16min30sec
+########################################
 
 import sys
 import httpResponse as HTTP
@@ -74,7 +77,7 @@ class userRead_test:
         # determine the result of expected response
         # The checking order is the same as that of the server
         # 404 > AUTH_FAIL > CAMP > CLS
-        # TODO: double check the order here
+        # Also Invalid URN > No permission
         if arg_list.count('v') == len(arg_list):
             return 'v'
         if arg_list.count(404) > 0:
@@ -492,7 +495,7 @@ class userRead_test:
             # restore the para_name_list
             self.para_name_list.insert(index1, arg1)
         
-ur = userRead_test('mob')
+ur = userRead_test('and')
 ur.blackbox_test()
 
 print "\nError Report"

@@ -3,7 +3,7 @@
 import urllib
 import pycurl
 import sys
-import ast  # convert string to dictionary
+import simplejson as json
 
 class Test:
     def __init__(self):
@@ -14,17 +14,18 @@ class Test:
         self.contents = self.contents + buf
     
     def update(self):
-        if self.contents != '':
-            self.cont_dict = ast.literal_eval(self.contents)
+        try:
+            if self.contents != '':
+                self.cont_dict = json.loads(self.contents)
+        except ValueError as valudErr:
+            print "Value error {0}".format(valudErr)
 
-pass_in = {'auth_token': '8c91d05d-5d35-4aa5-8cb8-772665649923',\
-           'client':'curl',\
-           'campaign_urn_list':'urn:campaign:ca',\
-           'class_urn_list':'a'*2096000}
+pass_in = {'auth_token': '8048f44f-6859-42f6-822f-4d28a57377e8',\
+           'client':'curl'}
 
 URL = "https://dev1.mobilizingcs.org"
 
-test_URL = "/app/user/read"
+test_URL = "/app/user_info/read"
 
 t = Test()
 c = pycurl.Curl()
@@ -37,6 +38,8 @@ print t.contents
 print c.getinfo(pycurl.HTTP_CODE)
 c.close()
 t.update()
+
+print t.cont_dict['data']
 
 # print out the infomation contains in Curl
 
