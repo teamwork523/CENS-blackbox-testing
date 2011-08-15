@@ -1,6 +1,8 @@
+== General Information ==
 The black box testing project for CENS AndWellness or Moblizing server. 
 All testing scripts or other source code live in this repo.
 
+== Description ==
 Here are things you need to know for this black testing program:
 1. This is a testing project for CENS Moblizing and AndWellness server.
 2. If any changes happen on the error code or length limit for parameters of APIs,
@@ -19,4 +21,7 @@ Here are things you need to know for this black testing program:
    than a day or longer. Considering efficiency issue, we only check the three
    types of cases as stated above.
 
-If you have any question, please contact uclakun@ucla.edu or Fayland@ucla.edu
+== Contact Information ==
+If you have any question, please contact 
+Haokun Luo: uclakun@ucla.edu 
+Xin Zhang: Fayland@ucla.edu
