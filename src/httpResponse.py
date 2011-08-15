@@ -8,12 +8,28 @@ import globConst as gconst
 
 # a function geting the authentication token
 def get_token(host, username, password):
-    token = http_res()
-    token.set_url(host+gconst.AUTH_TOKEN)
-    token.set_pass_in({'user': username, 'password': password, 'client': 'curl'})
-    token.request(0)
-    return token.cont_dict['token']
+    try:
+        res = http_res()
+        res.set_url(host+gconst.AUTH_TOKEN)
+        res.set_pass_in({'user': username, 'password': password, 'client': 'curl'})
+        res.request(0)
+        return res.cont_dict['token']
+    except pycurl.error as (errno, strerror):
+        print "pycurl error({0}): {1}".format(errno, strerror)
 
+# delete an existing campaign
+def delete_camp(host, token, camp_urn):
+    try:
+        res = http_res()
+        res.set_url(host+gconst.CAMP_DEL)
+        res.set_pass_in({'auth_token':token, 'client':'curl', 'campaign_urn':camp_urn})
+        res.request(0)
+        return res.cont_dict['result']
+    except pycurl.error as (errno, strerror):
+        print "pycurl error({0}): {1}".format(errno, strerror)
+    except KeyError:
+        print "Bad response for camp_delete"
+    
 # a function define to format of success report
 def write_succ_report(report, index, arg, res):
         report.append('*'*50)
