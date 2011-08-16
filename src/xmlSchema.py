@@ -17,8 +17,6 @@ TOTAL_CASE = 241
 # A relative path to access all the test xml files
 XML_PATH = '../test_file/xml/test_case'
 
-# Use zip(dict.keys(), dict.values())
-# can directly form a list of tuples
 # Testing class for xml schema
 class xmlSchema_test:
     def __init__(self, server):
@@ -57,11 +55,62 @@ class xmlSchema_test:
                                         # **************************************************
         
     def blackbox_test(self):
+        # Make sure no pre-existing campaign with campaign urn:
+        # 'urn:campaign:ca:ucla:Mobilize:July:2011:Test'
+        HTTP.delete_camp(self.host, self.TOKEN, gconst.CAMP_URN)
         # Complete testing on 241 testing xml
         for x in range(1,242):
-            FILE_NAME = PATH + '/xml' + str(x) + '.xml'
-            
-        
-        
+            FILE_PATH = PATH + '/xml' + str(x) + '.xml'
+            self.arg_pass_in['xml'] = (pycurl.FORM_FILE, FILE_PATH)
+            # Use zip(dict.keys(), dict.values())
+            # can convert dict into a list of tuples
+            self.http.set_pass_in_with_file(zip(self.arg_pass_in.keys(), self.arg_pass_in.values()))
+            # Need to upload a file, set flag to 1
+            # to change the type of HTTP request
+            self.http.request(1)
+            self.total_case = self.total_case + 1
+            # Print status
+            print 'Processing Case ID {0}.\n{1}% to finish auth_token API.'.format('XML'+str(self.total_case), self.total_case*100/TOTAL_CASE)
+            # check response
+            if self.exp_result[x] == 'success':
+                if (self.http.http_code != 200) or (self.http.cont_dict['result'] != 'success'):
+                    HTTP.write_err_report(self.err_report,\
+                                          'XML'+str(self.total_case),\
+                                          self.arg_pass_in,\
+                                          self.http.contents,\
+                                          '{"result": "success"}')
+                    # increment the invalid case id list and unexpected case counter
+                    self.invalid_case_id_list.append('XML'+str(self.total_case))
+                    self.unexpect_case = self.unexpect_case + 1
+                else:
+                    # need to delete the campaign first
+                    result = HTTP.delete_camp(self.host, self.TOKEN, gconst.CAMP_URN)
+                    if result != 'success':
+                        print >> sys.stderr, 'Error: Cannot delete existing campaign'
+                        sys.exit(1)
+                    HTTP.write_succ_report(self.succ_report,\
+                                           'XML'+str(self.total_case),\
+                                           self.arg_pass_in,\
+                                           self.http.contents)
+            else:
+                # Need to check whether expected string is a substring of result
+                if (self.http.http_code != 200) or \
+                   (self.http.cont_dict['result'] != 'failure') or \
+                   (self.http.cont_dict['errors'][0]['code'] != gconst.INVALID_XML) or \
+                   (self.http.contents.find(self.exp_result[x]) == -1):
+                    HTTP.write_err_report(self.err_report,\
+                                          'XML'+str(self.total_case),\
+                                          self.arg_pass_in,\
+                                          self.http.contents,\
+                                          gconst.INVALID_XML+': '+self.exp_result[x])
+                    # increment the invalid case id list and unexpected case counter
+                    self.invalid_case_id_list.append('XML'+str(self.total_case))
+                    self.unexpect_case = self.unexpect_case + 1
+                else:
+                    HTTP.write_succ_report(self.succ_report,\
+                                           'XML'+str(self.total_case),\
+                                           self.arg_pass_in,\
+                                           self.http.contents)
+                
         
         
