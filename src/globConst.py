@@ -2,8 +2,8 @@
 
 # A complete definition of all the necessary constant
 
-USERNAME = 'ohmage.luo'
-PASSWORD = 'eihuhaij.q'
+USERNAME = 'ohmage.d.s'
+PASSWORD = 'ohmage.d.s'
 WELL='https://dev1.andwellness.org'
 HOST='https://dev1.mobilizingcs.org'
 AUTH_TOKEN='/app/user/auth_token'
@@ -41,15 +41,18 @@ MISS=0
 
 # Error Summary
 # Here is a complete definition for error code and variables refering them
-# Server Version of 2.5
+# Server Version of 2.5 for current error code
 # Edit the part below before running the code
+# the comments is for version 2.6
 AUTH_FAIL = '0200'
+INVALID_XML = '0804' # '0702'
 INVALID_CAMP_URN = '0807' # '0700'
 NO_PERM_IN_CAMP = '0816' # '0707'
 INVALID_CLS_URN = '1204' # '0900'
 NO_PERM_IN_CLS = '1207' # '0905'
 
 ERROR = {AUTH_FAIL: 'Authentication failed',\
+         INVALID_XML: 'Invalid campaign XML.',\
          INVALID_CAMP_URN: 'Invalid campaign URN list or invalid URN in list',\
          NO_PERM_IN_CAMP: 'No permission to access all the campaigns in the list.',\
          INVALID_CLS_URN: 'Invalid class URN list or invalid URN in list',\
