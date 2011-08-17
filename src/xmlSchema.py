@@ -5,7 +5,7 @@
 # the online reference:
 # https://docs.google.com/spreadsheet/ccc?key=0AhSaxq43xGJfdFMwbHhwZUNhVnFXQWJKRkkxaHcyLUE&hl=en_US#gid=8
 ########################################
-# Testing time Approximation: 
+# Testing time Approximation: 3 min
 ########################################
 
 import os.path
