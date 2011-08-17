@@ -1,11 +1,11 @@
 #!/usr/bin/python
 
-# This is a user_read API black box testing file
+# This is a User Read API black box testing file
 # If any spec changes on the limit of argument,
 # please only modify the constant variables below
-########################################
-# Testing time Approximation: 16min27sec
-########################################
+###########################################
+# Testing time Approximation: 12 min
+###########################################
 # TODO: need to create class with URN "urn:class:ca:ucla:Mobilize:Test:2011"
 #       in order to allow AndWellness server to pass the test cases
 
@@ -37,7 +37,7 @@ class userRead_test:
             sys.exit(1)
         # Get the authentication token
         self.TOKEN = HTTP.get_token(self.host, gconst.USERNAME, gconst.PASSWORD)
-        # use one dictionary to construct all the test cases arguments
+        # use one dictionary to construct all the valid/invalid test cases arguments
         # use another dictionary to indicate whether it is valid or error
         # both dictionary are one to one corresponding
         self.valid_arg = {'auth_token': [self.TOKEN],\
@@ -120,6 +120,9 @@ class userRead_test:
             sys.exit(1)
         
     def blackbox_test(self):
+        # Should refresh the server campaign with URN gconst.CAMP_URN
+        HTTP.delete_camp(self.host, self.TOKEN, gconst.CAMP_URN)
+        HTTP.create_camp(self.host, self.TOKEN, gconst.CLS_URN_LIST)
         # Combination of three kinds of test cases defined in README
         # Special cases for 'Wrong argument name' and 'Missing Argument'
         # Part I: Valid Case

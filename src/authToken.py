@@ -4,7 +4,7 @@
 # If any spec changes on the limit of argument,
 # please only modify the constant variables below
 #######################################
-# Testing time Approximation: 3min30sec
+# Testing time Approximation: 2min30sec
 #######################################
 
 import sys

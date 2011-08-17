@@ -20,7 +20,7 @@ class Test:
         except ValueError as valudErr:
             print "Value error {0}".format(valudErr)
 
-pass_in = {'auth_token': '8048f44f-6859-42f6-822f-4d28a57377e8',\
+pass_in = {'auth_token': '61864fa7-ee5e-4184-9d9f-2882f59004d2',\
            'client':'curl'}
 
 URL = "https://dev1.mobilizingcs.org"

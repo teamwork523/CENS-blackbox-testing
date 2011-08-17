@@ -4,9 +4,9 @@
 # The ordering of the cases is the same as
 # the online reference:
 # https://docs.google.com/spreadsheet/ccc?key=0AhSaxq43xGJfdFMwbHhwZUNhVnFXQWJKRkkxaHcyLUE&hl=en_US#gid=8
-########################################
-# Testing time Approximation: 3 min
-########################################
+###########################################
+# Testing time Approximation: 2 min 30 sec
+###########################################
 
 import os.path
 import sys
@@ -375,7 +375,7 @@ class xmlSchema_test:
                                            self.arg_pass_in,\
                                            self.http.contents)
                                            
-xml = xmlSchema_test('and')
+xml = xmlSchema_test('mob')
 xml.blackbox_test()
 
 print "\nError Report"

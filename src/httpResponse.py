@@ -3,6 +3,7 @@
 import urllib
 import pycurl
 import sys
+import os.path
 import simplejson as json
 import globConst as gconst
 
@@ -16,6 +17,26 @@ def get_token(host, username, password):
         return res.cont_dict['token']
     except pycurl.error as (errno, strerror):
         print "pycurl error({0}): {1}".format(errno, strerror)
+
+# delete an existing campaign
+def create_camp(host, token, cls_list):
+    try:
+        # check path exists
+        if not os.path.exists(gconst.XML_FILE):
+            gconst.XML_FILE = '../test_file/xml/Mobilize_July_2011_test.xml'
+        res = http_res()
+        res.set_url(host+gconst.CAMP_CRET)
+        pass_in = {'auth_token':token, 'client':'curl',\
+                   'running_state':'running', 'privacy_state':'private',\
+                   'class_urn_list':cls_list,\
+                   'xml': (pycurl.FORM_FILE, gconst.XML_FILE)}
+        res.set_pass_in_with_file(zip(pass_in.keys(), pass_in.values()))
+        res.request(1)
+        return res.cont_dict['result']
+    except pycurl.error as (errno, strerror):
+        print "pycurl error({0}): {1}".format(errno, strerror)
+    except KeyError:
+        print "Bad response for camp_create"
 
 # delete an existing campaign
 def delete_camp(host, token, camp_urn):

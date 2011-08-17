@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
-# This is a auth_token Info Read API black box testing file
+# This is a User Info Read API black box testing file
 # If any spec changes on the limit of argument,
 # please only modify the constant variables below
 #######################################
-# Testing time Approximation: 24sec
+# Testing time Approximation: 20 sec
 #######################################
 
 import sys
@@ -158,7 +158,7 @@ class auth_tokenInfoRead_test:
                 del self.arg_pass_in['auth_token']
             self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
 
-a = auth_tokenInfoRead_test('and')
+a = auth_tokenInfoRead_test('mob')
 a.blackbox_test()
 print "\nError Report:"
 for x in a.err_report:
