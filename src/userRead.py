@@ -6,8 +6,6 @@
 ###########################################
 # Testing time Approximation: 12 min
 ###########################################
-# TODO: need to create class with URN "urn:class:ca:ucla:Mobilize:Test:2011"
-#       in order to allow AndWellness server to pass the test cases
 
 import sys
 import httpResponse as HTTP
