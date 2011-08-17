@@ -20,6 +20,20 @@ XML_PATH = '../test_file/xml/test_case'
 # check path exists
 if not os.path.exists(XML_PATH):
     XML_PATH = './test_file/xml/test_case'
+    if not os.path.exists(XML_PATH):
+        print >> sys.stderr, 'Error: Cannot find the test cases under test_file folder'
+        sys.exit(1)
+
+# Some usual cases:
+OVERFLOW = "not facet-valid with respect to pattern '[\\\\s]{0,1000}.{1,1000}[\\\\s]{0,1000}' for type 'NonEmptyString'"
+INTEGER = "not a valid integer: "
+POSITIVE = "value must be positive: "
+NONNEGATIVE = "value must be non-negative: "
+DUPLICATE = "duplicate found for "
+MAXLESSMIN = "max cannot be less than min"
+MEANINGLESS_DOT = "Empty content on either side of '.'"
+BOOLEAN = "not a valid value for 'boolean'"
+INVALID_COND = "Invalid condition expression"
 
 # Testing class for xml schema
 class xmlSchema_test:
@@ -36,7 +50,7 @@ class xmlSchema_test:
         # use dictionary to construct all expectation result
         # Notice that the expected string is only a substring of expected response
         # TODO: finish construct the expected result
-        self.exp_result = {1:"The content of element 'prompt' is not complete. One of '{id, explanationText, default, condition, skipLabel}' is expected",\
+        self.exp_result = {1:"The content of element 'campaign' is not complete. One of '{campaignUrn}' is expected",\
                            2:"XML document structures must start and end within the same entity",\
                            3:"The content of elements must consist of well-formed character data or markup",\
                            4:"The content of element 'campaign' is not complete. One of '{campaignName}' is expected",\
@@ -44,9 +58,9 @@ class xmlSchema_test:
                            6:"The content of element 'campaign' is not complete. One of '{surveys}' is expected",\
                            7:"The content of element 'surveys' is not complete. One of '{survey}' is expected",\
                            8:"The content of element 'survey' is not complete. One of '{id, title, description, introText, submitText, showSummary, editSummary, summaryText, anytime, contentList}' is expected",\
-                           9:"The content of element 'survey' is not complete. One of '{title}' is expected",\
-                           10:"The content of element 'survey' is not complete. One of '{description, introText, submitText}' is expected",\
-                           11:"The content of element 'survey' is not complete. One of '{description, introText, showSummary}' is expected",\
+                           9:"The content of element 'survey' is not complete. One of '{id}' is expected",\
+                           10:"The content of element 'survey' is not complete. One of '{title}' is expected",\
+                           11:"The content of element 'survey' is not complete. One of '{description, introText, submitText}' is expected",\
                            12:"The content of element 'survey' is not complete. One of '{description, introText, showSummary}' is expected",\
                            13:"Invalid survey config for survey id a. editSummary is required if showSummary is true",\
                            14:"Invalid survey config for survey id a. summaryText is required if showSummary is true",\
@@ -55,228 +69,228 @@ class xmlSchema_test:
                            17:"The content of element 'repeatableSet' is not complete. One of '{id, terminationSkipLabel, condition}' is expected",\
                            18:"The content of element 'repeatableSet' is not complete. One of '{terminationQuestion, terminationSkipLabel, condition}' is expected",\
                            19:"The content of element 'repeatableSet' is not complete. One of '{terminationTrueLabel, terminationSkipLabel, condition}' is expected",\
-                           20:"",\
-                           21:"",\
-                           22:"",\
-                           23:"",\
-                           24:"",\
-                           25:"",\
-                           26:"",\
-                           27:"",\
-                           28:"",\
-                           29:"",\
-                           30:"",\
-                           31:"",\
-                           32:"",\
-                           33:"",\
-                           34:"",\
-                           35:"",\
-                           36:"",\
-                           37:"",\
-                           38:"",\
-                           39:"",\
-                           40:"",\
-                           41:"",\
-                           42:"",\
-                           43:"",\
-                           44:"",\
-                           45:"",\
-                           46:"",\
-                           47:"",\
-                           48:"",\
-                           49:"",\
-                           50:"",\
-                           51:"",\
-                           52:"",\
-                           53:"",\
-                           54:"",\
-                           55:"",\
-                           56:"",\
-                           57:"",\
-                           58:"",\
-                           59:"",\
+                           20:"The content of element 'repeatableSet' is not complete. One of '{terminationFalseLabel, terminationSkipLabel, condition}' is expected",\
+                           21:"The content of element 'repeatableSet' is not complete. One of '{terminationSkipEnabled, terminationSkipLabel, condition}' is expected",\
+                           22:"Invalid repeatableSet config for repeatableSet id b. terminationSkipLabel is required if terminationSkipEnabled is true",\
+                           23:"Invalid content was found starting with element 'prompt'. One of '{terminationSkipLabel, condition, prompts}' is expected",\
+                           24:"The content of element 'prompt' is not complete. One of '{displayType, explanationText, default, condition, skipLabel}' is expected",\
+                           25:"The content of element 'prompt' is not complete. One of '{displayLabel, explanationText, default, condition, skipLabel}' is expected",\
+                           26:"The content of element 'prompt' is not complete. One of '{id, explanationText, default, condition, skipLabel}' is expected",\
+                           27:"The content of element 'prompt' is not complete. One of '{promptText, explanationText, default, condition, skipLabel}' is expected",\
+                           28:"Invalid prompt config for prompt id d. abbreviatedText is required if showSummary on the parent survey is true",\
+                           29:"The content of element 'prompt' is not complete. One of '{explanationText, promptType, default, condition, skipLabel}' is expected",\
+                           30:"invalid prompt configuration",\
+                           31:"Invalid content was found starting with element 'key'. One of '{property}' is expected",\
+                           32:"Invalid content was found starting with element 'label'. One of '{key}' is expected",\
+                           33:"The content of element 'property' is not complete. One of '{label}' is expected",\
+                           34:"The content of element 'prompt' is not complete. One of '{explanationText, default, condition, skippable, skipLabel}' is expected",\
+                           35:"Invalid prompt config for prompt id d. skipLabel is required if skippable is true",\
+                           36:"Invalid content was found starting with element 'messageText'. One of '{prompt, repeatableSet, message}' is expected",\
+                           37:"The content of element 'message' is not complete. One of '{condition, messageText}' is expected",\
+                           38:MAXLESSMIN,\
+                           39:INTEGER,\
+                           40:INTEGER+'2147483648',\
+                           41:"success",\
+                           42:MAXLESSMIN,\
+                           43:INTEGER,\
+                           44:INTEGER+'2147483648',\
+                           45:NONNEGATIVE+'-10',\
+                           46:"max cannot be greater than min",\
+                           47:INTEGER,\
+                           48:INTEGER+'2147483648',\
+                           49:POSITIVE+'-100',\
+                           50:INTEGER+'min',\
+                           51:INTEGER+'2147483648',\
+                           52:NONNEGATIVE+'-100',\
+                           53:OVERFLOW,\
+                           54:OVERFLOW,\
+                           55:DUPLICATE+'choice key: 0',\
+                           56:DUPLICATE+'label: 10',\
+                           57:INTEGER+'min',\
+                           58:INTEGER+'2147483648',\
+                           59:NONNEGATIVE+'-10000',\
                            60:"",\
-                           61:"",\
-                           62:"",\
-                           63:"",\
-                           64:"",\
-                           65:"",\
-                           66:"",\
-                           67:"",\
-                           68:"",\
-                           69:"",\
-                           70:"",\
-                           71:"",\
-                           72:"",\
-                           73:"",\
-                           74:"",\
-                           75:"",\
-                           76:"",\
-                           77:"",\
-                           78:"",\
-                           79:"",\
-                           80:"",\
-                           81:"",\
-                           82:"",\
-                           83:"",\
-                           84:"",\
-                           85:"",\
-                           86:"",\
-                           87:"",\
-                           88:"",\
-                           89:"",\
-                           90:"",\
-                           91:"",\
-                           92:"",\
-                           93:"",\
-                           94:"",\
-                           95:"",\
-                           96:"",\
-                           97:"",\
-                           98:"",\
-                           99:"",\
-                           100:"",\
-                           101:"",\
-                           102:"",\
-                           103:"",\
-                           104:"",\
-                           105:"",\
-                           106:"",\
-                           107:"",\
-                           108:"",\
-                           109:"",\
-                           110:"",\
-                           111:"",\
-                           112:"",\
-                           113:"",\
-                           114:"",\
-                           115:"",\
-                           116:"",\
-                           117:"",\
-                           118:"",\
-                           119:"",\
-                           120:"",\
-                           121:"",\
-                           122:"",\
-                           123:"",\
-                           124:"",\
-                           125:"",\
-                           126:"",\
-                           127:"",\
-                           128:"",\
-                           129:"",\
-                           130:"",\
-                           131:"",\
-                           132:"",\
-                           133:"",\
-                           134:"",\
-                           135:"",\
-                           136:"",\
-                           137:"",\
-                           138:"",\
-                           139:"",\
-                           140:"",\
-                           141:"",\
-                           142:"",\
-                           143:"",\
-                           144:"",\
-                           145:"",\
-                           146:"",\
-                           147:"",\
-                           148:"",\
-                           149:"",\
-                           150:"",\
-                           151:"",\
-                           152:"",\
-                           153:"",\
-                           154:"",\
-                           155:"",\
-                           156:"",\
-                           157:"",\
-                           158:"",\
-                           159:"",\
-                           160:"",\
-                           161:"",\
-                           162:"",\
-                           163:"",\
-                           164:"",\
-                           165:"",\
-                           166:"",\
-                           167:"",\
-                           168:"",\
-                           169:"",\
-                           170:"",\
-                           171:"",\
-                           172:"",\
-                           173:"",\
-                           174:"",\
-                           175:"",\
-                           176:"",\
-                           177:"",\
-                           178:"",\
-                           179:"",\
-                           180:"",\
-                           181:"",\
-                           182:"",\
-                           183:"",\
-                           184:"",\
-                           185:"",\
-                           186:"",\
-                           187:"",\
-                           188:"",\
-                           189:"",\
-                           190:"",\
-                           191:"",\
-                           192:"",\
-                           193:"",\
-                           194:"",\
-                           195:"",\
-                           196:"",\
-                           197:"",\
-                           198:"",\
-                           199:"",\
-                           200:"",\
-                           201:"",\
-                           202:"",\
-                           203:"",\
-                           204:"",\
-                           205:"",\
-                           206:"",\
-                           207:"",\
-                           208:"",\
-                           209:"",\
-                           210:"",\
-                           211:"",\
-                           212:"",\
-                           213:"",\
-                           214:"",\
-                           215:"",\
-                           216:"",\
-                           217:"",\
-                           218:"",\
-                           219:"",\
-                           220:"",\
-                           221:"",\
-                           222:"",\
-                           223:"",\
-                           224:"",\
-                           225:"",\
-                           226:"",\
-                           227:"",\
-                           228:"",\
-                           229:"",\
-                           230:"",\
-                           231:"",\
-                           232:"",\
-                           233:"",\
-                           234:"",\
-                           235:"",\
-                           236:"",\
-                           237:"",\
-                           238:"",\
-                           239:"",\
-                           240:"",\
-                           241:""}
+                           61:OVERFLOW,\
+                           62:DUPLICATE+'choice key: 0',\
+                           63:DUPLICATE+'label: 10',\
+                           64:INTEGER+'min',\
+                           65:INTEGER+'2147483648',\
+                           66:NONNEGATIVE+'-100',\
+                           67:OVERFLOW,\
+                           68:OVERFLOW,\
+                           69:"duplicate choice key found: 0",\
+                           70:"duplicate choice label found: 10",\
+                           71:INTEGER+'min',\
+                           72:INTEGER+'2147483648',\
+                           73:NONNEGATIVE+'-10000',\
+                           74:OVERFLOW,\
+                           75:OVERFLOW,\
+                           76:"duplicate choice key found: 0",\
+                           77:"duplicate choice label found: 10",\
+                           78:"At least 2 'property' nodes are required for prompt",\
+                           79:"At least 2 'property' nodes are required for prompt",\
+                           80:"success",\
+                           81:"success",\
+                           82:"invalid prompt configuration",\
+                           83:"missing 'res' property for XML fragment",\
+                           84:OVERFLOW,\
+                           85:"Invalid content was found starting with element 'label'. One of '{key}' is expected",\
+                           86:INTEGER+'a',\
+                           87:POSITIVE+'-100',\
+                           88:OVERFLOW,\
+                           89:OVERFLOW,\
+                           90:"Invalid content was found starting with element 'label'. One of '{key}' is expected",\
+                           91:OVERFLOW,\
+                           92:OVERFLOW,\
+                           93:"All Android package names must contain at least one '.' in",\
+                           94:MEANINGLESS_DOT,\
+                           95:OVERFLOW,\
+                           96:"Invalid content was found starting with element 'label'. One of '{key}' is expected",\
+                           97:OVERFLOW,\
+                           98:OVERFLOW,\
+                           99:"All Android Activitys must contain at least one '.' in",\
+                           100:MEANINGLESS_DOT,\
+                           101:OVERFLOW,\
+                           102:"Invalid content was found starting with element 'label'. One of '{key}' is expected",\
+                           103:OVERFLOW,\
+                           104:OVERFLOW,\
+                           105:"'min_runs' must be non-negative",\
+                           106:"'min_runs' is not a valid integer",\
+                           107:OVERFLOW,\
+                           108:"Invalid content was found starting with element 'label'. One of '{key}' is expected",\
+                           109:OVERFLOW,\
+                           110:OVERFLOW,\
+                           111:OVERFLOW,\
+                           112:"Invalid content was found starting with element 'label'. One of '{key}' is expected",\
+                           113:OVERFLOW,\
+                           114:OVERFLOW,\
+                           115:"'autolaunch' must be either 'true' or 'false'",\
+                           116:OVERFLOW,\
+                           117:"Invalid content was found starting with element 'label'. One of '{key}' is expected",\
+                           118:OVERFLOW,\
+                           119:OVERFLOW,\
+                           120:"'retries' must be non-negative",\
+                           121:"'retries' is not a valid integer",\
+                           122:OVERFLOW,\
+                           123:"Invalid key in properties list: output in",\
+                           124:OVERFLOW,\
+                           125:OVERFLOW,\
+                           126:OVERFLOW,\
+                           127:"success",\
+                           128:OVERFLOW,\
+                           129:OVERFLOW,\
+                           130:"Campaign already exists",\
+                           131:OVERFLOW,\
+                           132:"campaignUrn is not a valid URN: urn:a",\
+                           133:OVERFLOW,\
+                           134:OVERFLOW,\
+                           135:"Invalid server URL",\
+                           136:OVERFLOW,\
+                           137:OVERFLOW,\
+                           138:"Invalid configuration: a duplicate id was found: b",\
+                           139:OVERFLOW,\
+                           140:OVERFLOW,\
+                           141:OVERFLOW,\
+                           142:OVERFLOW,\
+                           143:OVERFLOW,\
+                           144:OVERFLOW,\
+                           145:OVERFLOW,\
+                           146:OVERFLOW,\
+                           147:OVERFLOW,\
+                           148:BOOLEAN,\
+                           149:BOOLEAN,\
+                           150:BOOLEAN,\
+                           151:BOOLEAN,\
+                           152:BOOLEAN,\
+                           153:BOOLEAN,\
+                           154:OVERFLOW,\
+                           155:OVERFLOW,\
+                           156:BOOLEAN,\
+                           157:BOOLEAN,\
+                           158:BOOLEAN,\
+                           159:"The content of element 'contentList' is not complete. One of '{prompt, repeatableSet, message}' is expected",\
+                           160:"Element 'contentList' cannot have character [children], because the type's content type is element-only",\
+                           161:"Element 'contentList' cannot have character [children], because the type's content type is element-only",\
+                           162:OVERFLOW,\
+                           163:"Invalid configuration: a duplicate id was found: a",\
+                           164:"success",\
+                           165:OVERFLOW,\
+                           166:OVERFLOW,\
+                           167:OVERFLOW,\
+                           168:OVERFLOW,\
+                           169:OVERFLOW,\
+                           170:OVERFLOW,\
+                           171:OVERFLOW,\
+                           172:BOOLEAN,\
+                           173:BOOLEAN,\
+                           174:BOOLEAN,\
+                           175:OVERFLOW,\
+                           176:OVERFLOW,\
+                           177:"a condition is not allowed on the first prompt of a survey. invalid prompt id",\
+                           178:"invalid condition in multi or single choice prompt: <=",\
+                           179:INVALID_COND,\
+                           180:INVALID_COND,\
+                           181:INVALID_COND,\
+                           182:INVALID_COND,\
+                           183:"The content of element 'prompt' is not complete. One of '{displayType, displayLabel, unit, id, promptText, abbreviatedText, explanationText, promptType, properties, default, condition, skippable, skipLabel}' is expected",\
+                           184:"Element 'prompt' cannot have character [children], because the type's content type is element-only",\
+                           185:OVERFLOW,\
+                           186:"invalid display type: count count",\
+                           187:OVERFLOW,\
+                           188:OVERFLOW,\
+                           189:OVERFLOW,\
+                           190:OVERFLOW,\
+                           191:OVERFLOW,\
+                           192:OVERFLOW,\
+                           193:"Invalid configuration: a duplicate id was found: d",\
+                           194:"success",\
+                           195:OVERFLOW,\
+                           196:OVERFLOW,\
+                           197:OVERFLOW,\
+                           198:OVERFLOW,\
+                           199:OVERFLOW,\
+                           200:OVERFLOW,\
+                           201:OVERFLOW,\
+                           202:OVERFLOW,\
+                           203:"Invalid configuration: an unknown prompt type was found: !@#$%^()_+",\
+                           204:OVERFLOW,\
+                           205:"The content of element 'properties' is not complete. One of '{property}' is expected",\
+                           206:"Element 'properties' cannot have character [children], because the type's content type is element-only",\
+                           207:"Element 'properties' cannot have character [children], because the type's content type is element-only",\
+                           208:OVERFLOW,\
+                           209:"value is not an integer: !@#$%^*()_+",\
+                           210:"value is out of min-max range: 20",\
+                           211:"default values for text prompts are disallowed",\
+                           212:"default value [aaa] is missing from choices",\
+                           213:"default value [aaa] is missing from choices",\
+                           214:"default value [aaa] is missing from choices",\
+                           215:"default value [aaa] is missing from choices",\
+                           216:"value is not an integer: !@#$%^*()_+",\
+                           217:"value is out of min-max range: -1",\
+                           218:"default values are disallowed for photo prompts",\
+                           219:"default values are disallowed for remote Activity prompt types",\
+                           220:OVERFLOW,\
+                           221:"a condition is not allowed on the first prompt of a survey. invalid prompt id: r",\
+                           222:"invalid condition in multi or single choice prompt: <=",\
+                           223:INVALID_COND,\
+                           224:INVALID_COND,\
+                           225:INVALID_COND,\
+                           226:INVALID_COND,\
+                           227:OVERFLOW,\
+                           228:BOOLEAN,\
+                           229:BOOLEAN,\
+                           230:BOOLEAN,\
+                           231:OVERFLOW,\
+                           232:OVERFLOW,\
+                           233:OVERFLOW,\
+                           234:OVERFLOW,\
+                           235:"a condition is not allowed on the first prompt of a survey. invalid prompt id: drink",\
+                           236:"invalid condition in multi or single choice prompt: <=",\
+                           237:INVALID_COND,\
+                           238:INVALID_COND,\
+                           239:INVALID_COND,\
+                           240:INVALID_COND,\
+                           241:OVERFLOW}
         self.http = HTTP.http_res()
         self.http.set_url(self.host+gconst.CAMP_CRET)
         # xml argument will be add and update in the blackbox_test function
@@ -303,7 +317,7 @@ class xmlSchema_test:
         HTTP.delete_camp(self.host, self.TOKEN, gconst.CAMP_URN)
         # Complete testing on 241 testing xml
         for x in range(1,242):
-            FILE_PATH = PATH + '/xml' + str(x) + '.xml'
+            FILE_PATH = XML_PATH + '/xml' + str(x) + '.xml'
             self.arg_pass_in['xml'] = (pycurl.FORM_FILE, FILE_PATH)
             # Use zip(dict.keys(), dict.values())
             # can convert dict into a list of tuples
@@ -313,7 +327,7 @@ class xmlSchema_test:
             self.http.request(1)
             self.total_case = self.total_case + 1
             # Print status
-            print 'Processing Case ID {0}.\n{1}% to finish auth_token API.'.format('XML'+str(self.total_case), self.total_case*100/TOTAL_CASE)
+            print 'Processing Case ID {0}.\n{1}% to finish XML Schema Testing.'.format('XML'+str(self.total_case), self.total_case*100/TOTAL_CASE)
             # check response
             if self.exp_result[x] == 'success':
                 if (self.http.http_code != 200) or (self.http.cont_dict['result'] != 'success'):
@@ -326,15 +340,15 @@ class xmlSchema_test:
                     self.invalid_case_id_list.append('XML'+str(self.total_case))
                     self.unexpect_case = self.unexpect_case + 1
                 else:
-                    # need to delete the campaign first
-                    result = HTTP.delete_camp(self.host, self.TOKEN, gconst.CAMP_URN)
-                    if result != 'success':
-                        print >> sys.stderr, 'Error: Cannot delete existing campaign'
-                        sys.exit(1)
                     HTTP.write_succ_report(self.succ_report,\
                                            'XML'+str(self.total_case),\
                                            self.arg_pass_in,\
                                            self.http.contents)
+                    # need to delete the campaign after writing the success report
+                    result = HTTP.delete_camp(self.host, self.TOKEN, gconst.CAMP_URN)
+                    if result != 'success':
+                        print >> sys.stderr, 'Error: Cannot delete existing campaign'
+                        sys.exit(1)
             else:
                 # Need to check whether expected string is a substring of result
                 if (self.http.http_code != 200) or \
@@ -349,11 +363,30 @@ class xmlSchema_test:
                     # increment the invalid case id list and unexpected case counter
                     self.invalid_case_id_list.append('XML'+str(self.total_case))
                     self.unexpect_case = self.unexpect_case + 1
+                    # Although unexpected success, still need to delete the original campaign
+                    if (self.http.http_code == 200) and (self.http.cont_dict['result'] == 'success'):
+                        result = HTTP.delete_camp(self.host, self.TOKEN, gconst.CAMP_URN)
+                        if result != 'success':
+                            print >> sys.stderr, 'Error: Cannot delete existing campaign'
+                            sys.exit(1)
                 else:
                     HTTP.write_succ_report(self.succ_report,\
                                            'XML'+str(self.total_case),\
                                            self.arg_pass_in,\
                                            self.http.contents)
+                                           
+xml = xmlSchema_test('and')
+xml.blackbox_test()
+
+print "\nError Report"
+for x in xml.err_report:
+    print x
+
+print "Summary Section"
+print "Total number of cases expected {0}".format(TOTAL_CASE)
+print "Total number of cases: {0}".format(xml.total_case)
+print "Invalid cases: {0}".format(xml.unexpect_case)
+print "Invalid case list: {0}".format(xml.invalid_case_id_list)
                 
         
         
