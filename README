@@ -1,6 +1,11 @@
 == General Information ==
 The black box testing project for CENS AndWellness or Moblizing server. 
-All testing scripts or other source code live in this repo.
+All testing scripts or other source code live in this repository.
+
+== Server Requirement ==
+1. User 'ohmage.d.s' should be a supervisor on both server
+2. User 'ohmage.d.s' should be privileged in the class 'urn:testing:haokun' on both server
+3. Campaign 'urn:campaign:ca:ucla:Mobilize:May:2011:Snack' should exist on both server
 
 == Description ==
 Here are things you need to know for this black testing program:
