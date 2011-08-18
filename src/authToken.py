@@ -21,8 +21,10 @@ TOTAL_CASE = 294
 class authToken_test:
     def __init__(self, server):
         if server == 'mob':
+            # Mobilizing server
             self.host = gconst.HOST
         elif server == 'and':
+            # Andwellness server
             self.host = gconst.WELL
         else:
             print >> sys.stderr, 'Error: Invalid host URL'

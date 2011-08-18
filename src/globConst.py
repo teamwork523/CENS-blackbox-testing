@@ -50,15 +50,21 @@ MISS=0
 AUTH_FAIL = '0200'
 INVALID_XML = '0804' # '0702'
 INVALID_CAMP_URN = '0807' # '0700'
+INVALID_PRI_STATE = '0811' # '0704'
+INVALID_RUN_STATE = '0812' # '0703'
 NO_PERM_IN_CAMP = '0816' # '0707'
 INVALID_CLS_URN = '1204' # '0900'
+UNKNOWN_CLS = '1205' # '0905'
 NO_PERM_IN_CLS = '1207' # '0905'
 
 ERROR = {AUTH_FAIL: 'Authentication failed',\
          INVALID_XML: 'Invalid campaign XML.',\
          INVALID_CAMP_URN: 'Invalid campaign URN list or invalid URN in list',\
+         INVALID_PRI_STATE: 'Invalid privacy state',\
+         INVALID_RUN_STATE: 'Invalid running state',\
          NO_PERM_IN_CAMP: 'No permission to access all the campaigns in the list.',\
          INVALID_CLS_URN: 'Invalid class URN list or invalid URN in list',\
+         UNKNOWN_CLS: 'A class in the class list is unknown to the user. It could not exist in the system or the user could not have permissions to access it.',\
          NO_PERM_IN_CLS: 'No permission to access all the classes in the list.'
          }
 
