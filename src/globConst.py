@@ -25,6 +25,7 @@ CAMP_URN_LIST_CAP='"urn:CAMPAIGN:ca:ucla:Mobilize:May:2011:ADVERTISEMENT,urn:cam
 CAMP_URN_LIST_COMMA=',,,urn:campaign:ca:ucla:Mobilize:July:2011:Test,,,urn:campaign:ca:ucla:Mobilize:July:2011:Test,,,,,'
 CAMP_URN_LIST_TEST_DUP='urn:campaign:ca:ucla:Mobilize:July:2011:Test,urn:campaign:ca:ucla:Mobilize:July:2011:Test'
 CLS_URN='urn:testing:haokun'
+CLS_UNKNOWN='urn:a:b'
 CLS_URN_CAP='URN:testing:haokun'
 CLS_URN_LIST='urn:class:ca:ucla:Mobilize:Test:2011,urn:testing:haokun'
 CLS_URN_LIST_COMMA=',,,,urn:testing:haokun,,,,,urn:testing:haokun,,,,'
