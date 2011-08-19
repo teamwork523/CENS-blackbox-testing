@@ -24,7 +24,7 @@ DES_LIMIT = 65535
 # other argument just increment by 1
 INCR = 2000
 # Total numbe of cases for User Read API
-TOTAL_CASE =
+TOTAL_CASE = 72
 
 # check path exists
 # A file path = TEST_FILE_FOLDER + FILE PATH RELATIVE TO FOLDER
@@ -120,6 +120,34 @@ class campCret_test:
         if arg_list.count(gconst.UNKNOWN_CLS) > 0:
             return gconst.UNKNOWN_CLS
         return gconst.INVALID_XML
+        
+    def update_arg_pass_in(self, arg, value, flag):
+        # a helper function to update the self.arg_pass_in
+        # flag = 0 indicate add one argument
+        # flag = 1 indicate remove one argument
+        if flag == 0:
+            if value == 'auth_token1':
+                self.arg_pass_in[value] = self.TOKEN
+            elif value == 'client1':
+                self.arg_pass_in[value] = 'curl'
+            elif value == 'running_state1':
+                self.arg_pass_in[value] = 'running'
+            elif value == 'privacy_state1':
+                self.arg_pass_in[value] = 'private'
+            elif value == 'class_urn_list1':
+                self.arg_pass_in[value] = gconst.CLS_URN
+            elif value != gconst.MISS:
+                self.arg_pass_in[arg] = value
+        elif flag == 1:
+            if value == 'auth_token1' or value == 'client1' or \
+               value == 'running_state1' or value == 'privacy_state1' or \
+               value == 'class_urn_list1':
+                del self.arg_pass_in[value]
+            elif value != gconst.MISS:
+                del self.arg_pass_in[arg]
+        else:
+            print >> sys.stderr, 'Error: Invalid update argument flag'
+            sys.exit(1)
         
     def blackbox_test(self):
         
