@@ -23,7 +23,7 @@ DES_LIMIT = 65535
 # only apply this to auth_token and client argument
 # other argument just increment by 1
 INCR = 2000
-# Total numbe of cases for User Read API
+# Total numbe of cases
 TOTAL_CASE = 72
 
 # check path exists
