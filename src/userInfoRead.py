@@ -7,7 +7,6 @@
 # Testing time Approximation: 20 sec
 #######################################
 
-import sys
 import httpResponse as HTTP
 import globConst as gconst
 

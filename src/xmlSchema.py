@@ -9,7 +9,6 @@
 ###########################################
 
 import os.path
-import sys
 import pycurl
 import httpResponse as HTTP
 import globConst as gconst
