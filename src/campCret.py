@@ -25,7 +25,7 @@ DES_LIMIT = 65535
 # other argument just increment by 1
 INCR = 2000
 # Total numbe of cases
-TOTAL_CASE = 72
+TOTAL_CASE = 72 + 1656 # + 9394
 
 # check path exists
 # A file path = TEST_FILE_FOLDER + FILE PATH RELATIVE TO FOLDER
@@ -418,9 +418,9 @@ class campCret_test:
             index = self.para_name_list.index(para)
             # each turn pick one as invalid argument
             self.para_name_list.remove(para)
-            arg[0] = para                         # invalid arg
+            arg.append(para)    # invalid arg
             for x in range(1,7):
-                arg[x] = self.para_name_list[x-1]
+                arg.append(self.para_name_list[x-1])   # valid arg
             # Add first argument
             for a0 in self.invalid_arg[arg[0]]:
                 self.arg_pass_in = {}
