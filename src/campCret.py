@@ -25,7 +25,7 @@ DES_LIMIT = 65535
 # other argument just increment by 1
 INCR = 2000
 # Total numbe of cases
-TOTAL_CASE = 72 + 1656 # + 9394
+TOTAL_CASE = 72 + 1656 + 9394
 
 # check path exists
 # A file path = TEST_FILE_FOLDER + FILE PATH RELATIVE TO FOLDER
@@ -418,9 +418,11 @@ class campCret_test:
             index = self.para_name_list.index(para)
             # each turn pick one as invalid argument
             self.para_name_list.remove(para)
-            arg.append(para)    # invalid arg
+            # store the only one invalid argument
+            arg.append(para)
+            # store all other valid arguments
             for x in range(1,7):
-                arg.append(self.para_name_list[x-1])   # valid arg
+                arg.append(self.para_name_list[x-1])
             # Add first argument
             for a0 in self.invalid_arg[arg[0]]:
                 self.arg_pass_in = {}
@@ -488,7 +490,95 @@ class campCret_test:
                 self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
             # restore the para_name_list
             self.para_name_list.insert(index, para)
-            
+        
+        ########################################################################
+        ########################################################################    
+        # Part III: Invalid case with two invalid arguments
+        arg = []
+        # Get first invalid argument
+        for para1 in self.para_name_list:
+            index1 = self.para_name_list.index(para1)
+            arg.append(para1)
+            # each turn remove one invalid parameter from the para_name_list
+            self.para_name_list.remove(para1)
+            # Get second invalid argument
+            for para2 in self.para_name_list:
+                index1 = self.para_name_list.index(para2)
+                arg.append(para2)
+                # each turn remove one invalid parameter from the para_name_list
+                self.para_name_list.remove(para2)
+                # Store all other valid argument
+                for x in range(1,6):
+                    arg.append(self.para_name_list[x-1])
+                # Add first argument
+                for a0 in self.invalid_arg[arg[0]]:
+                    self.arg_pass_in = {}
+                    self.arg_pass_in_msg = []
+                    self.update_arg_pass_in(arg[0], a0, 0)
+                    self.arg_pass_in_msg.append(self.invalid_arg_msg[arg[0]][self.invalid_arg[arg[0]].index(a0)])
+                    # Add second arguemnt
+                    for a1 in self.invalid_arg[arg[1]]:
+                        self.update_arg_pass_in(arg[1], a1, 0)
+                        self.arg_pass_in_msg.append(self.invalid_arg_msg[arg[1]][self.invalid_arg[arg[1]].index(a1)])
+                        # Add third arguemnt
+                        for a2 in self.valid_arg[arg[2]]:
+                            self.update_arg_pass_in(arg[2], a2, 0)
+                            self.arg_pass_in_msg.append(self.valid_arg_msg[arg[2]][self.valid_arg[arg[2]].index(a2)])
+                            # Add forth arguemnt
+                            for a3 in self.valid_arg[arg[3]]:
+                                self.update_arg_pass_in(arg[3], a3, 0)
+                                self.arg_pass_in_msg.append(self.valid_arg_msg[arg[3]][self.valid_arg[arg[3]].index(a3)])
+                                # Add fifth arguemnt
+                                for a4 in self.valid_arg[arg[4]]:
+                                    self.update_arg_pass_in(arg[4], a4, 0)
+                                    self.arg_pass_in_msg.append(self.valid_arg_msg[arg[4]][self.valid_arg[arg[4]].index(a4)])
+                                    # Add sixth arguemnt
+                                    for a5 in self.valid_arg[arg[5]]:
+                                        self.update_arg_pass_in(arg[5], a5, 0)
+                                        self.arg_pass_in_msg.append(self.valid_arg_msg[arg[5]][self.valid_arg[arg[5]].index(a5)])
+                                        # Add seventh arguemnt
+                                        for a6 in self.valid_arg[arg[6]]:
+                                            self.update_arg_pass_in(arg[6], a6, 0)
+                                            self.arg_pass_in_msg.append(self.valid_arg_msg[arg[6]][self.valid_arg[arg[6]].index(a6)]) 
+                                            # Determine the expected result
+                                            exp_result = self.result_det(self.arg_pass_in_msg)
+                                            # Use zip(dict.keys(), dict.values())
+                                            # can convert dict into a list of tuples
+                                            self.http.set_pass_in_with_file(zip(self.arg_pass_in.keys(), self.arg_pass_in.values()))
+                                            # Need to upload a file, set flag to 1
+                                            # to change the type of HTTP request
+                                            self.http.request(1)
+                                            self.total_case = self.total_case + 1
+                                            # Print status
+                                            print 'Processing Case ID {0}.\n{1}% to finish User Read API.'.format('CC'+str(self.total_case), \
+                                                  self.total_case*100/TOTAL_CASE)
+                                            # check the response
+                                            self.err_response_check(exp_result)
+                                            # update arg_pass_in and arg_pass_in_msg
+                                            self.update_arg_pass_in(arg[6], a6, 1)
+                                            self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
+                                        # update arg_pass_in and arg_pass_in_msg
+                                        self.update_arg_pass_in(arg[5], a5, 1)
+                                        self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
+                                    # update arg_pass_in and arg_pass_in_msg
+                                    self.update_arg_pass_in(arg[4], a4, 1)
+                                    self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
+                                # update arg_pass_in and arg_pass_in_msg
+                                self.update_arg_pass_in(arg[3], a3, 1)
+                                self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
+                            # update arg_pass_in and arg_pass_in_msg
+                            self.update_arg_pass_in(arg[2], a2, 1)
+                            self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
+                        # update arg_pass_in and arg_pass_in_msg
+                        self.update_arg_pass_in(arg[1], a1, 1)
+                        self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
+                    # update arg_pass_in and arg_pass_in_msg
+                    self.update_arg_pass_in(arg[0], a0, 1)
+                    self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
+                # restore the para_name_list
+                self.para_name_list.insert(index2, para2)
+            # restore the para_name_list
+            self.para_name_list.insert(index1, para1)
             
         
 cc = campCret_test('mob')
