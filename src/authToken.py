@@ -14,8 +14,8 @@ import globConst as gconst
 # the boundary length for each argument
 USER_LIMIT = 15
 PASSWORD_LIMIT = 100 
-CLIENT_LIMIT = 250
-TOTAL_CASE = 294
+CLIENT_LIMIT = 2000 # 2096000
+TOTAL_CASE = 245
 
 # Testing class for authentication token API
 class authToken_test:
@@ -34,10 +34,11 @@ class authToken_test:
         # both dictionary are one to one corresponding
         self.arg = {'user': [gconst.USERNAME, gconst.MISS, '', gconst.RAND_STR, 'a'*USER_LIMIT, 'a'*(USER_LIMIT+1), 'user1'],\
                     'password': [gconst.PASSWORD, gconst.MISS, '', gconst.RAND_STR, 'a'*PASSWORD_LIMIT, 'a'*(PASSWORD_LIMIT+1), 'password1'],\
-                    'client': ['curl', '', 'a'*CLIENT_LIMIT, gconst.MISS, 'a'*(CLIENT_LIMIT+1), 'client1']}
-        self.arg_msg = {'user': ['v', 404, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, 404, 404],\
-                        'password': ['v', 404, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, 404, 404],\
-                        'client': ['v', 'v', 'v', 404, 404, 404]}
+                    'client': ['curl', '', 'a'*CLIENT_LIMIT, gconst.MISS, 'client1']}
+        # TODO: Include 'a'*(CLIENT_LIMIT+1) when decide reasonable limit
+        self.arg_msg = {'user': ['v', gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL],\
+                        'password': ['v', gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL],\
+                        'client': ['v', 'v', 'v', gconst.AUTH_FAIL, gconst.AUTH_FAIL]}
         self.http = HTTP.http_res()
         self.http.set_url(self.host+gconst.AUTH_TOKEN)
         self.arg_pass_in = {}
@@ -58,8 +59,6 @@ class authToken_test:
         # determine the result of expected response
         if arg_list.count('v') == len(arg_list):
             return 'v'      # if all arguments are valid, then it is a valid case
-        if arg_list.count(404) > 0:
-            return 404      # if any of the arguments msg is 404, then result is 404
         return gconst.AUTH_FAIL
         
     def blackbox_test(self):
@@ -115,21 +114,6 @@ class authToken_test:
                                                    'A'+str(self.total_case),\
                                                    self.arg_pass_in,\
                                                    self.http.contents)
-                    elif exp_result == 404:
-                        if self.http.http_code != 404:
-                            HTTP.write_err_report(self.err_report,\
-                                                  'A'+str(self.total_case),\
-                                                  self.arg_pass_in,\
-                                                  self.http.contents,\
-                                                  '404 NOT FOUND')
-                            # increment the invalid case id list and unexpected case counter
-                            self.invalid_case_id_list.append('A'+str(self.total_case))
-                            self.unexpect_case = self.unexpect_case + 1
-                        else:
-                            HTTP.write_succ_report(self.succ_report,\
-                                                   'A'+str(self.total_case),\
-                                                   self.arg_pass_in,\
-                                                   '404 NOT FOUND')
                     elif exp_result == gconst.AUTH_FAIL:
                         if (self.http.http_code != 200) or \
                            (self.http.cont_dict['result'] != 'failure') or \
