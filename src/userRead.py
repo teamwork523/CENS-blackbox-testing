@@ -16,12 +16,12 @@ TOKEN_LIMIT = 2000 # 2097000
 CLIENT_LIMIT = 2000 # 2096000
 CAMP_LIMIT = 2000 # 2097000
 CLS_LIMIT = 2000 # 2096000
-# boundary + INCR = 404 NOT FOUND
+# boundary + INCR = gconst.AUTH_FAIL NOT FOUND
 # Add cases when you want to test this
 # Currently we disable this, because too large boundary hurts performance
 INCR = 2000
 # Total numbe of cases for User Read API
-TOTAL_CASE = 75 + 515 + 787
+TOTAL_CASE = 75 + 485 + 602
 
 # Testing class for User Read API
 class userRead_test:
@@ -49,13 +49,13 @@ class userRead_test:
         # TODO: add 'a'*(CLIENT_LIMIT+INCR), 'a'*(CAMP_LIMIT+INCR), 'a'*(CLS_LIMIT+INCR) when you have reasonable limit
         self.invalid_arg = {'auth_token': [gconst.MISS, '', gconst.RAND_STR, 'a'*TOKEN_LIMIT, 'auth_token1'],\
                             'client': [gconst.MISS, 'client1'],\
-                            'campaign_urn_list': [gconst.RAND_STR, gconst.CAMP_URN_CAP, 'a'*CAMP_LIMIT],\
-                            'class_urn_list': [gconst.RAND_STR, gconst.CLS_URN_CAP, 'a'*CLS_LIMIT]}
-        # TODO: add 404 for 'client', 'campaign_urn_list' and 'class_urn_list' when you have reasonable limit
+                            'campaign_urn_list': [gconst.RAND_STR, 'a'*CAMP_LIMIT],\
+                            'class_urn_list': [gconst.RAND_STR, 'a'*CLS_LIMIT]}
+        # TODO: add gconst.AUTH_FAIL for 'client', 'campaign_urn_list' and 'class_urn_list' when you have reasonable limit
         self.invalid_arg_msg = {'auth_token': [gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL],\
-                                'client': [404, 404],\
-                                'campaign_urn_list': [gconst.INVALID_CAMP_URN, gconst.NO_PERM_IN_CAMP, gconst.INVALID_CAMP_URN],\
-                                'class_urn_list': [gconst.INVALID_CLS_URN, gconst.NO_PERM_IN_CLS, gconst.INVALID_CLS_URN]}
+                                'client': [gconst.AUTH_FAIL, gconst.AUTH_FAIL],\
+                                'campaign_urn_list': [gconst.INVALID_CAMP_URN, gconst.INVALID_CAMP_URN],\
+                                'class_urn_list': [gconst.INVALID_CLS_URN, gconst.INVALID_CLS_URN]}
         self.para_name_list = ['auth_token', 'client', 'campaign_urn_list', 'class_urn_list']
         self.http = HTTP.http_res()
         self.http.set_url(self.host+gconst.USER_READ)
@@ -76,18 +76,16 @@ class userRead_test:
     def result_det(self, arg_list):
         # determine the result of expected response
         # The checking order is the same as that of the server
-        # 404 > AUTH_FAIL > CAMP > CLS
+        # gconst.AUTH_FAIL > AUTH_FAIL > CAMP > CLS
         # Also Invalid URN > No permission
         if arg_list.count('v') == len(arg_list):
             return 'v'
-        if arg_list.count(404) > 0:
-            return 404
-        if arg_list.count(gconst.AUTH_FAIL) > 0:
-            return gconst.AUTH_FAIL
         if arg_list.count(gconst.INVALID_CAMP_URN) > 0:
             return gconst.INVALID_CAMP_URN
         if arg_list.count(gconst.INVALID_CLS_URN) > 0:
             return gconst.INVALID_CLS_URN
+        if arg_list.count(gconst.AUTH_FAIL) > 0:
+            return gconst.AUTH_FAIL
         if arg_list.count(gconst.NO_PERM_IN_CAMP) > 0:
             return gconst.NO_PERM_IN_CAMP
         return gconst.NO_PERM_IN_CLS
@@ -234,21 +232,6 @@ class userRead_test:
                                                            'UR'+str(self.total_case),\
                                                            self.arg_pass_in,\
                                                            self.http.contents)
-                            elif exp_result == 404:
-                                if self.http.http_code != 404:
-                                    HTTP.write_err_report(self.err_report,\
-                                                          'UR'+str(self.total_case),\
-                                                          self.arg_pass_in,\
-                                                          self.http.contents,\
-                                                          '404 NOT FOUND')
-                            # increment the invalid case id list and unexpected case counter
-                                    self.invalid_case_id_list.append('UR'+str(self.total_case))
-                                    self.unexpect_case = self.unexpect_case + 1
-                                else:
-                                    HTTP.write_succ_report(self.succ_report,\
-                                                           'UR'+str(self.total_case),\
-                                                           self.arg_pass_in,\
-                                                           '404 NOT FOUND')
                             elif exp_result == gconst.NO_PERM_IN_CAMP:
                                 if (self.http.http_code != 200) or \
                                    (self.http.cont_dict['result'] != 'failure') or \
@@ -395,21 +378,6 @@ class userRead_test:
                                                                'UR'+str(self.total_case),\
                                                                self.arg_pass_in,\
                                                                self.http.contents)
-                                elif exp_result == 404:
-                                    if self.http.http_code != 404:
-                                        HTTP.write_err_report(self.err_report,\
-                                                              'UR'+str(self.total_case),\
-                                                              self.arg_pass_in,\
-                                                              self.http.contents,\
-                                                              '404 NOT FOUND')
-                                        # increment the invalid case id list and unexpected case counter
-                                        self.invalid_case_id_list.append('UR'+str(self.total_case))
-                                        self.unexpect_case = self.unexpect_case + 1
-                                    else:
-                                        HTTP.write_succ_report(self.succ_report,\
-                                                               'UR'+str(self.total_case),\
-                                                               self.arg_pass_in,\
-                                                               '404 NOT FOUND')
                                 elif exp_result == gconst.NO_PERM_IN_CAMP:
                                     if (self.http.http_code != 200) or \
                                        (self.http.cont_dict['result'] != 'failure') or \
@@ -498,7 +466,7 @@ class userRead_test:
             # restore the para_name_list
             self.para_name_list.insert(index1, arg1)
         
-ur = userRead_test('mob')
+ur = userRead_test('and')
 ur.blackbox_test()
 
 print "\nError Report"
