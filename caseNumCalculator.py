@@ -20,14 +20,15 @@ def main(valid_list, invalid_list):
     valid_case = valid_case+temp
     
     # invalid case with one invalid argument
+    index1 = 0
     for b in invalid_list:
-        index1 = invalid_list.index(b)
         pop_out = valid_list.pop(index1)
         temp = b
         for c in valid_list:
             temp = temp * c
         invalid_one = invalid_one + temp
         valid_list.insert(index1, pop_out)
+        index1 = index1 + 1
     
     # invalid case with two invalid arguments
     index1 = 0
@@ -55,6 +56,6 @@ def main(valid_list, invalid_list):
     print 'Total number of cases: {0}'.format(valid_case + invalid_one + invalid_two)
     
 if __name__ == "__main__":
-    valid = [1,3,2,2,2,1,3]
-    invalid = [5,2,5,5,6,4,1]
+    valid = [1,3,5,5]
+    invalid = [5,2,2,3]
     main(valid, invalid)
