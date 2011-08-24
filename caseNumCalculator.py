@@ -56,6 +56,11 @@ def main(valid_list, invalid_list):
     print 'Total number of cases: {0}'.format(valid_case + invalid_one + invalid_two)
     
 if __name__ == "__main__":
-    valid = [1,3,5,5]
-    invalid = [5,2,2,3]
+    # number of cases per each valid argument
+    valid = [1,3,2,2,2,1,3]
+    # number of cases per each invalid argument
+    invalid = [4,2,3,3,4,4,1]
     main(valid, invalid)
+    
+    
+    
