@@ -15,17 +15,17 @@ import globConst as gconst
 
 # Length boundary definition
 TOKEN_LIMIT = 2000 # 2097000
-CLIENT_LIMIT = 2000 # 2096000
-RUN_STATE_LIMIT = 50
-PRI_STATE_LIMIT =  50
-CLS_LIMIT = 25600
-DES_LIMIT = 65535
-# undecided boundary + INCR = 404 NOT FOUND
+CLIENT_LIMIT = 255
+RUN_STATE_LIMIT = 2000 # 2096000
+PRI_STATE_LIMIT = 2000 # 2096000
+CLS_LIMIT = 2000 # 2096000
+DES_LIMIT = 2000 # 2096000
+# undecided boundary + INCR = gconst.AUTH_FAIL NOT FOUND
 # only apply this to auth_token and client argument
 # other argument just increment by 1
 INCR = 2000
 # Total numbe of cases
-TOTAL_CASE = 72 + 1656 + 9394
+TOTAL_CASE = 72 + 1032 + 5898
 
 # check path exists
 # A file path = TEST_FILE_FOLDER + FILE PATH RELATIVE TO FOLDER
@@ -78,20 +78,22 @@ class campCret_test:
                               'class_urn_list': ['v', 'v'],\
                               'xml': ['v'],\
                               'description': ['v', 'v', 'v']}
-        self.invalid_arg = {'auth_token': ['', gconst.MISS, gconst.RAND_STR, 'a'*TOKEN_LIMIT, 'auth_token1'],\
-                            'client': [gconst.MISS, 'client1'],\
-                            'running_state': ['', gconst.MISS, 'a'*RUN_STATE_LIMIT, 'a'*(RUN_STATE_LIMIT+1), 'running_state1'],\
-                            'privacy_state': ['', gconst.MISS, 'a'*PRI_STATE_LIMIT, 'a'*(PRI_STATE_LIMIT+1), 'privacy_state1'],\
-                            'class_urn_list': ['', gconst.MISS, gconst.CLS_UNKNOWN, 'a'*CLS_LIMIT, 'a'*(CLS_LIMIT+1), 'class_urn_list1'],\
+        # in order to reduce the test cases, I combine the '' with gconst.MISS, since server treat them equally
+        # Add boundary case for 'running_state', 'privacy_state', 
+        self.invalid_arg = {'auth_token': [gconst.MISS, gconst.RAND_STR, 'a'*TOKEN_LIMIT, 'auth_token1'],\
+                            'client': [gconst.MISS, 'client1', 'a'*(CLIENT_LIMIT+1)],\
+                            'running_state': [gconst.MISS, 'a'*RUN_STATE_LIMIT, 'running_state1'],\
+                            'privacy_state': [gconst.MISS, 'a'*PRI_STATE_LIMIT, 'privacy_state1'],\
+                            'class_urn_list': [gconst.MISS, gconst.CLS_UNKNOWN, 'a'*CLS_LIMIT, 'class_urn_list1'],\
                             'xml': [(pycurl.FORM_FILE, XML_PDF), (pycurl.FORM_FILE, XML_DOC), (pycurl.FORM_FILE, XML_EXE), (pycurl.FORM_FILE, XML_FOLDER)],\
-                            'description':['a'*(DES_LIMIT+1)]}
-        self.invalid_arg_msg = {'auth_token': [gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL],\
-                                'client': [404, 404],\
-                                'running_state': [404, 404, gconst.INVALID_RUN_STATE, 404, 404],\
-                                'privacy_state': [404, 404, gconst.INVALID_PRI_STATE, 404, 404],\
-                                'class_urn_list': [404, 404, gconst.UNKNOWN_CLS, gconst.INVALID_CLS_URN, 404, 404],\
+                            'description':['a'*(DES_LIMIT+INCR)]}
+        self.invalid_arg_msg = {'auth_token': [gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL],\
+                                'client': [gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.CLT_TOO_LONG],\
+                                'running_state': [gconst.INVALID_RUN_STATE, gconst.INVALID_RUN_STATE, gconst.INVALID_RUN_STATE],\
+                                'privacy_state': [gconst.INVALID_PRI_STATE, gconst.INVALID_PRI_STATE, gconst.INVALID_PRI_STATE],\
+                                'class_urn_list': [gconst.INVALID_CLS_URN, gconst.INVALID_CLS_URN, gconst.INVALID_CLS_URN, gconst.INVALID_CLS_URN],\
                                 'xml': [gconst.INVALID_XML, gconst.INVALID_XML, gconst.INVALID_XML, gconst.INVALID_XML],\
-                                'description': [404]}
+                                'description': ['v']}
         self.para_name_list = ['auth_token', 'client', 'running_state', 'privacy_state', 'class_urn_list', 'xml', 'description']
         self.http = HTTP.http_res()
         self.http.set_url(self.host+gconst.CAMP_CRET)
@@ -112,22 +114,20 @@ class campCret_test:
     def result_det(self, arg_list):
         # determine the result of expected response
         # The checking order is the same as that of the server
-        # 404 > AUTH_FAIL > RUN > PRI > CLS > XML
+        # gconst.AUTH_FAIL > CLT_LONG > XML > RUN > PRI > CLS
         if arg_list.count('v') == len(arg_list):
             return 'v'
-        if arg_list.count(404) > 0:
-            return 404
         if arg_list.count(gconst.AUTH_FAIL) > 0:
             return gconst.AUTH_FAIL
+        if arg_list.count(gconst.CLT_TOO_LONG) > 0:
+            return gconst.CLT_TOO_LONG
+        if arg_list.count(gconst.INVALID_XML) > 0:
+            return gconst.INVALID_XML
         if arg_list.count(gconst.INVALID_RUN_STATE) > 0:
             return gconst.INVALID_RUN_STATE
         if arg_list.count(gconst.INVALID_PRI_STATE) > 0:
             return gconst.INVALID_PRI_STATE
-        if arg_list.count(gconst.INVALID_CLS_URN) > 0:
-            return gconst.INVALID_CLS_URN
-        if arg_list.count(gconst.UNKNOWN_CLS) > 0:
-            return gconst.UNKNOWN_CLS
-        return gconst.INVALID_XML
+        return gconst.INVALID_CLS_URN
         
     def update_arg_pass_in(self, arg, value, flag):
         # a helper function to update the self.arg_pass_in
@@ -168,27 +168,6 @@ class campCret_test:
                                       self.arg_pass_in,\
                                       self.http.contents,\
                                       gconst.AUTH_FAIL+': '+gconst.ERROR[gconst.AUTH_FAIL])
-                # increment the invalid case id list and unexpected case counter
-                self.invalid_case_id_list.append('CC'+str(self.total_case))
-                self.unexpect_case = self.unexpect_case + 1
-                # Unexpected 'success' create campaign, need to delete the wrong campaign
-                if (self.http.http_code == 200) and (self.http.cont_dict['result'] == 'success'):
-                    result = HTTP.delete_camp(self.host, self.TOKEN, gconst.CAMP_URN)
-                    if result != 'success':
-                        print >> sys.stderr, 'Error: Cannot delete existing campaign'
-                        sys.exit(1)
-            else:
-                HTTP.write_succ_report(self.succ_report,\
-                                       'CC'+str(self.total_case),\
-                                       self.arg_pass_in,\
-                                       self.http.contents)
-        elif exp_result == 404:
-            if self.http.http_code != 404:
-                HTTP.write_err_report(self.err_report,\
-                                      'CC'+str(self.total_case),\
-                                      self.arg_pass_in,\
-                                      self.http.contents,\
-                                      '404 Not Found')
                 # increment the invalid case id list and unexpected case counter
                 self.invalid_case_id_list.append('CC'+str(self.total_case))
                 self.unexpect_case = self.unexpect_case + 1
@@ -272,29 +251,6 @@ class campCret_test:
                                        'CC'+str(self.total_case),\
                                        self.arg_pass_in,\
                                        self.http.contents)
-        elif exp_result == gconst.UNKNOWN_CLS:
-            if (self.http.http_code != 200) or \
-               (self.http.cont_dict['result'] != 'failure') or \
-               (self.http.cont_dict['errors'][0]['code'] != gconst.UNKNOWN_CLS):
-                HTTP.write_err_report(self.err_report,\
-                                      'CC'+str(self.total_case),\
-                                      self.arg_pass_in,\
-                                      self.http.contents,\
-                                      gconst.UNKNOWN_CLS+': '+gconst.ERROR[gconst.UNKNOWN_CLS])
-                # increment the invalid case id list and unexpected case counter
-                self.invalid_case_id_list.append('CC'+str(self.total_case))
-                self.unexpect_case = self.unexpect_case + 1
-                # Unexpected 'success' create campaign, need to delete the wrong campaign
-                if (self.http.http_code == 200) and (self.http.cont_dict['result'] == 'success'):
-                    result = HTTP.delete_camp(self.host, self.TOKEN, gconst.CAMP_URN)
-                    if result != 'success':
-                        print >> sys.stderr, 'Error: Cannot delete existing campaign'
-                        sys.exit(1)
-            else:
-                HTTP.write_succ_report(self.succ_report,\
-                                       'CC'+str(self.total_case),\
-                                       self.arg_pass_in,\
-                                       self.http.contents)
         elif exp_result == gconst.INVALID_XML:
             if (self.http.http_code != 200) or \
                (self.http.cont_dict['result'] != 'failure') or \
@@ -318,6 +274,28 @@ class campCret_test:
                                        'CC'+str(self.total_case),\
                                        self.arg_pass_in,\
                                        self.http.contents)
+        # this is necessary, since we don't really have an invalid case for "description"
+        # TODO: you may delete this condition when "description" has something invalid
+        elif exp_result == 'v':
+            if (self.http.http_code != 200) or (self.http.cont_dict['result'] != 'success'):
+                HTTP.write_err_report(self.err_report,\
+                                      'CC'+str(self.total_case),\
+                                      self.arg_pass_in,\
+                                      self.http.contents,\
+                                      '{"result": "success"}')
+                # increment the invalid case id list and unexpected case counter
+                self.invalid_case_id_list.append('CC'+str(self.total_case))
+                self.unexpect_case = self.unexpect_case + 1
+            else:
+                HTTP.write_succ_report(self.succ_report,\
+                                       'CC'+str(self.total_case),\
+                                       self.arg_pass_in,\
+                                       self.http.contents)
+                # need to delete the campaign after writing the success report
+                result = HTTP.delete_camp(self.host, self.TOKEN, gconst.CAMP_URN)
+                if result != 'success':
+                    print >> sys.stderr, 'Error: Cannot delete existing campaign'
+                    sys.exit(1)
         else:
             print >> sys.stderr, 'Error: Unexpected single argument invalid test case'
             sys.exit(1)
@@ -502,8 +480,8 @@ class campCret_test:
             # each turn remove one invalid parameter from the para_name_list
             self.para_name_list.remove(para1)
             # Get second invalid argument
-            for para2 in self.para_name_list:
-                index1 = self.para_name_list.index(para2)
+            for para2 in self.para_name_list[index1:]:
+                index2 = self.para_name_list.index(para2)
                 arg.append(para2)
                 # each turn remove one invalid parameter from the para_name_list
                 self.para_name_list.remove(para2)
@@ -554,6 +532,8 @@ class campCret_test:
                                                   self.total_case*100/TOTAL_CASE)
                                             # check the response
                                             self.err_response_check(exp_result)
+                                            if self.err_report != []:
+                                                print self.err_report
                                             # update arg_pass_in and arg_pass_in_msg
                                             self.update_arg_pass_in(arg[6], a6, 1)
                                             self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
@@ -581,7 +561,7 @@ class campCret_test:
             self.para_name_list.insert(index1, para1)
             
         
-cc = campCret_test('mob')
+cc = campCret_test('and')
 cc.blackbox_test()
 
 print "\nError Report"
