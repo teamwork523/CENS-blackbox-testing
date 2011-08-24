@@ -57,13 +57,13 @@
                     </properties>
                     <skippable>false</skippable>
                 </prompt>
-                <repeatableSet>
-                    <id>b</id>
-                    <terminationQuestion>a</terminationQuestion>
-                    <terminationTrueLabel>a</terminationTrueLabel>
-                    <terminationFalseLabel>a</terminationFalseLabel>
-                    <terminationSkipEnabled>false</terminationSkipEnabled>
-                    <prompts>
+                
+                    
+                    
+                    
+                    
+                    
+                    
                         <prompt>
                             <displayType>event</displayType>
                             <displayLabel>a</displayLabel>
@@ -77,8 +77,8 @@
                                 
                             </properties>
                         </prompt>
-                    </prompts>
-                </repeatableSet>
+                    
+                
                 <prompt>
                     <displayType>event</displayType>
                     <displayLabel>a</displayLabel>

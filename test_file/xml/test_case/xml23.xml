@@ -13,12 +13,12 @@
             <summaryText>a</summaryText>
             <anytime>true</anytime>
             <contentList>
-                <repeatableSet>
-                    <id>b</id>
-                    <terminationQuestion>a</terminationQuestion>
-                    <terminationTrueLabel>a</terminationTrueLabel>
-                    <terminationFalseLabel>a</terminationFalseLabel>
-                    <terminationSkipEnabled>false</terminationSkipEnabled>
+                
+                    
+                    
+                    
+                    
+                    
                     
                         <prompt>
                             <displayType>event</displayType>
@@ -41,7 +41,7 @@
                             </properties>
                         </prompt>
                     
-                </repeatableSet>
+                
                 <prompt>
                     <displayType>event</displayType>
                     <displayLabel>a</displayLabel>
