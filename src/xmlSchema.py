@@ -25,15 +25,17 @@ if not os.path.exists(XML_PATH):
         sys.exit(1)
 
 # Some usual cases:
-OVERFLOW = "not facet-valid with respect to pattern '[\\\\s]{0,1000}.{1,1000}[\\\\s]{0,1000}' for type 'NonEmptyString'"
+REPEATABLE_SET = "Invalid content was found starting with element 'repeatableSet'. One of '{prompt, message}' is expected"
+OVERFLOW = "not facet-valid with respect to pattern '[\\\\s]{0,1000}.{1,1000}[\\\\s]{0,1000}' for type 'NonEmptyString"
 INTEGER = "not a valid integer: "
-POSITIVE = "value must be positive: "
-NONNEGATIVE = "value must be non-negative: "
+POSITIVE = "Value must be positive: "
+NONNEGATIVE = "Value must be non-negative: "
 DUPLICATE = "duplicate found for "
 MAXLESSMIN = "max cannot be less than min"
 MEANINGLESS_DOT = "Empty content on either side of '.'"
 BOOLEAN = "not a valid value for 'boolean'"
-INVALID_COND = "Invalid condition expression"
+BAD_COND_FORM = "The condition sentence is not well-formed: "
+INVALID_COND = "Condition parse failed for condition Sentence: "
 
 # Testing class for xml schema
 class xmlSchema_test:
@@ -54,7 +56,7 @@ class xmlSchema_test:
                            2:"XML document structures must start and end within the same entity",\
                            3:"The content of elements must consist of well-formed character data or markup",\
                            4:"The content of element 'campaign' is not complete. One of '{campaignName}' is expected",\
-                           5:"The content of element 'campaign' is not complete. One of '{serverUrl}' is expected",\
+                           5:"The content of element 'campaign' is not complete. One of '{serverUrl, surveys}' is expected",\
                            6:"The content of element 'campaign' is not complete. One of '{surveys}' is expected",\
                            7:"The content of element 'surveys' is not complete. One of '{survey}' is expected",\
                            8:"The content of element 'survey' is not complete. One of '{id, title, description, introText, submitText, showSummary, editSummary, summaryText, anytime, contentList}' is expected",\
@@ -65,14 +67,14 @@ class xmlSchema_test:
                            13:"Invalid survey config for survey id a. editSummary is required if showSummary is true",\
                            14:"Invalid survey config for survey id a. summaryText is required if showSummary is true",\
                            15:"The content of element 'survey' is not complete. One of '{description, introText, anytime}' is expected",\
-                           16:"Invalid content was found starting with element 'repeatableSet'. One of '{description, introText, contentList}' is expected",\
-                           17:"The content of element 'repeatableSet' is not complete. One of '{id, terminationSkipLabel, condition}' is expected",\
-                           18:"The content of element 'repeatableSet' is not complete. One of '{terminationQuestion, terminationSkipLabel, condition}' is expected",\
-                           19:"The content of element 'repeatableSet' is not complete. One of '{terminationTrueLabel, terminationSkipLabel, condition}' is expected",\
-                           20:"The content of element 'repeatableSet' is not complete. One of '{terminationFalseLabel, terminationSkipLabel, condition}' is expected",\
-                           21:"The content of element 'repeatableSet' is not complete. One of '{terminationSkipEnabled, terminationSkipLabel, condition}' is expected",\
-                           22:"Invalid repeatableSet config for repeatableSet id b. terminationSkipLabel is required if terminationSkipEnabled is true",\
-                           23:"Invalid content was found starting with element 'prompt'. One of '{terminationSkipLabel, condition, prompts}' is expected",\
+                           16:"Invalid content was found starting with element 'prompt'. One of '{description, introText, contentList}' is expected.",\
+                           17:"success",\
+                           18:"success",\
+                           19:"success",\
+                           20:"success",\
+                           21:"success",\
+                           22:"success",\
+                           23:"success",\
                            24:"The content of element 'prompt' is not complete. One of '{displayType, explanationText, default, condition, skipLabel}' is expected",\
                            25:"The content of element 'prompt' is not complete. One of '{displayLabel, explanationText, default, condition, skipLabel}' is expected",\
                            26:"The content of element 'prompt' is not complete. One of '{id, explanationText, default, condition, skipLabel}' is expected",\
@@ -85,7 +87,7 @@ class xmlSchema_test:
                            33:"The content of element 'property' is not complete. One of '{label}' is expected",\
                            34:"The content of element 'prompt' is not complete. One of '{explanationText, default, condition, skippable, skipLabel}' is expected",\
                            35:"Invalid prompt config for prompt id d. skipLabel is required if skippable is true",\
-                           36:"Invalid content was found starting with element 'messageText'. One of '{prompt, repeatableSet, message}' is expected",\
+                           36:"Invalid content was found starting with element 'messageText'. One of '{prompt, message}' is expected",\
                            37:"The content of element 'message' is not complete. One of '{condition, messageText}' is expected",\
                            38:MAXLESSMIN,\
                            39:INTEGER,\
@@ -179,7 +181,7 @@ class xmlSchema_test:
                            127:"success",\
                            128:OVERFLOW,\
                            129:OVERFLOW,\
-                           130:"Campaign already exists",\
+                           130:"campaign already exists",\
                            131:OVERFLOW,\
                            132:"campaignUrn is not a valid URN: urn:a",\
                            133:OVERFLOW,\
@@ -187,7 +189,7 @@ class xmlSchema_test:
                            135:"Invalid server URL",\
                            136:OVERFLOW,\
                            137:OVERFLOW,\
-                           138:"Invalid configuration: a duplicate id was found: b",\
+                           138:"Invalid configuration: a duplicate id was found: c",\
                            139:OVERFLOW,\
                            140:OVERFLOW,\
                            141:OVERFLOW,\
@@ -208,32 +210,32 @@ class xmlSchema_test:
                            156:BOOLEAN,\
                            157:BOOLEAN,\
                            158:BOOLEAN,\
-                           159:"The content of element 'contentList' is not complete. One of '{prompt, repeatableSet, message}' is expected",\
+                           159:"The content of element 'contentList' is not complete. One of '{prompt, message}' is expected",\
                            160:"Element 'contentList' cannot have character [children], because the type's content type is element-only",\
                            161:"Element 'contentList' cannot have character [children], because the type's content type is element-only",\
-                           162:OVERFLOW,\
-                           163:"Invalid configuration: a duplicate id was found: a",\
+                           162:"success",\
+                           163:"success",\
                            164:"success",\
-                           165:OVERFLOW,\
-                           166:OVERFLOW,\
-                           167:OVERFLOW,\
-                           168:OVERFLOW,\
-                           169:OVERFLOW,\
-                           170:OVERFLOW,\
-                           171:OVERFLOW,\
-                           172:BOOLEAN,\
-                           173:BOOLEAN,\
-                           174:BOOLEAN,\
-                           175:OVERFLOW,\
-                           176:OVERFLOW,\
-                           177:"a condition is not allowed on the first prompt of a survey. invalid prompt id",\
-                           178:"invalid condition in multi or single choice prompt: <=",\
-                           179:INVALID_COND,\
-                           180:INVALID_COND,\
-                           181:INVALID_COND,\
-                           182:INVALID_COND,\
-                           183:"The content of element 'prompt' is not complete. One of '{displayType, displayLabel, unit, id, promptText, abbreviatedText, explanationText, promptType, properties, default, condition, skippable, skipLabel}' is expected",\
-                           184:"Element 'prompt' cannot have character [children], because the type's content type is element-only",\
+                           165:"success",\
+                           166:"success",\
+                           167:"success",\
+                           168:"success",\
+                           169:"success",\
+                           170:"success",\
+                           171:"success",\
+                           172:"success",\
+                           173:"success",\
+                           174:"success",\
+                           175:"success",\
+                           176:"success",\
+                           177:"success",\
+                           178:"success",\
+                           179:"success",\
+                           180:"success",\
+                           181:"success",\
+                           182:"success",\
+                           183:"success",\
+                           184:"success",\
                            185:OVERFLOW,\
                            186:"invalid display type: count count",\
                            187:OVERFLOW,\
@@ -258,24 +260,24 @@ class xmlSchema_test:
                            206:"Element 'properties' cannot have character [children], because the type's content type is element-only",\
                            207:"Element 'properties' cannot have character [children], because the type's content type is element-only",\
                            208:OVERFLOW,\
-                           209:"value is not an integer: !@#$%^*()_+",\
-                           210:"value is out of min-max range: 20",\
+                           209:"Value is not an integer: !@#$%^*()_+",\
+                           210:"Value is out of min-max range: 20",\
                            211:"default values for text prompts are disallowed",\
                            212:"default value [aaa] is missing from choices",\
                            213:"default value [aaa] is missing from choices",\
                            214:"default value [aaa] is missing from choices",\
                            215:"default value [aaa] is missing from choices",\
-                           216:"value is not an integer: !@#$%^*()_+",\
-                           217:"value is out of min-max range: -1",\
+                           216:"Value is not an integer: !@#$%^*()_+",\
+                           217:"Value is out of min-max range: -1",\
                            218:"default values are disallowed for photo prompts",\
                            219:"default values are disallowed for remote Activity prompt types",\
                            220:OVERFLOW,\
                            221:"a condition is not allowed on the first prompt of a survey. invalid prompt id: r",\
                            222:"invalid condition in multi or single choice prompt: <=",\
-                           223:INVALID_COND,\
-                           224:INVALID_COND,\
-                           225:INVALID_COND,\
-                           226:INVALID_COND,\
+                           223:BAD_COND_FORM+".==0",\
+                           224:BAD_COND_FORM+"r>=...",\
+                           225:INVALID_COND+"r>=====0",\
+                           226:INVALID_COND+"r>=0 not r == 1",\
                            227:OVERFLOW,\
                            228:BOOLEAN,\
                            229:BOOLEAN,\
@@ -328,6 +330,7 @@ class xmlSchema_test:
             self.total_case = self.total_case + 1
             # Print status
             print 'Processing Case ID {0}.\n{1}% to finish XML Schema Testing.'.format('XML'+str(self.total_case), self.total_case*100/TOTAL_CASE)
+            print self.http.contents
             # check response
             if self.exp_result[x] == 'success':
                 if (self.http.http_code != 200) or (self.http.cont_dict['result'] != 'success'):
@@ -351,6 +354,7 @@ class xmlSchema_test:
                         sys.exit(1)
             else:
                 # Need to check whether expected string is a substring of result
+                print self.http.contents.find(self.exp_result[x])
                 if (self.http.http_code != 200) or \
                    (self.http.cont_dict['result'] != 'failure') or \
                    (self.http.cont_dict['errors'][0]['code'] != gconst.INVALID_XML) or \
@@ -375,7 +379,7 @@ class xmlSchema_test:
                                            self.arg_pass_in,\
                                            self.http.contents)
                                            
-xml = xmlSchema_test('mob')
+xml = xmlSchema_test('and')
 xml.blackbox_test()
 
 print "\nError Report"
