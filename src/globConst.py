@@ -46,6 +46,7 @@ MISS=0
 # Here is a complete definition for error code and variables refering them
 # Server version 2.6
 AUTH_FAIL = '0200'
+CLT_TOO_LONG = '0301'
 INVALID_XML = '0702'
 INVALID_CAMP_URN = '0700'
 INVALID_PRI_STATE = '0704'
@@ -55,6 +56,7 @@ INVALID_CLS_URN = '0900'
 NO_PERM_IN_CLS = '0905'
 
 ERROR = {AUTH_FAIL: 'Authentication failed or missing required arguments',\
+         CLT_TOO_LONG: 'The client value is too long.',\
          INVALID_XML: 'Invalid campaign XML.',\
          INVALID_CAMP_URN: 'Invalid campaign URN list or invalid URN in list',\
          INVALID_PRI_STATE: 'Invalid privacy state',\
