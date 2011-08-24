@@ -117,19 +117,18 @@ class http_res:
             if (file_up == 0):
                 curl.setopt(curl.POSTFIELDS, urllib.urlencode(self.pass_in))
             else:
-            # Hint for future: use zip(dict.keys(), dict.values())
+            # use zip(dict.keys(), dict.values())
             # can directly form a list of tuples
                 curl.setopt(curl.HTTPPOST, self.pass_in_with_file)
             curl.setopt(curl.WRITEFUNCTION, self.write_callback)
+            # set time out to 10 seconds
+            curl.setopt(curl.TIMEOUT, 10)
             curl.perform()
             self.http_code = curl.getinfo(pycurl.HTTP_CODE)     # get http response status
             curl.close()
             self.convert_to_dict()
         except pycurl.error as (errno, strerror):
-            print "pycurl error({0}): {1}".format(errno, strerror)
-        
-        
-        
+            print "pycurl error({0}): {1}".format(errno, strerror)      
         
         
         
