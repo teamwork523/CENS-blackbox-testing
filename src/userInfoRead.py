@@ -13,13 +13,13 @@ import globConst as gconst
 
 # the boundary length for each argument
 TOKEN_LIMIT = 2000 # 2097000
-CLIENT_LIMIT = 2000 # 2096000
+CLIENT_LIMIT = 255
 # boundary + INCR = gconst.AUTH_FAIL NOT FOUND
 # Add cases when you want to test this
 # Currently we disable this, because too large boundary hurts performance
 INCR = 2000
 # Total numbe of cases for auth_token Read API
-TOTAL_CASE = 30
+TOTAL_CASE = 36
 
 # Testing class for auth_token Info Read API
 class auth_tokenInfoRead_test:
@@ -38,9 +38,9 @@ class auth_tokenInfoRead_test:
         # both dictionary are one to one corresponding
         # TODO: add 'a'*(TOKEN_LIMIT+INCR) and 'a'*(CLIENT_LIMIT+INCR) later when you have reasonable boundary
         self.arg = {'auth_token': [self.TOKEN, gconst.MISS, '', gconst.RAND_STR, 'a'*TOKEN_LIMIT, 'auth_token1'],\
-                    'client': ['curl', '', 'a'*CLIENT_LIMIT, gconst.MISS, 'client1']}
+                    'client': ['curl', '', 'a'*CLIENT_LIMIT, 'a'*(CLIENT_LIMIT+1), gconst.MISS, 'client1']}
         self.arg_msg = {'auth_token': ['v', gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL],\
-                        'client': ['v', 'v', 'v', gconst.AUTH_FAIL, gconst.AUTH_FAIL]}
+                        'client': ['v', 'v', 'v', gconst.CLT_TOO_LONG, gconst.AUTH_FAIL, gconst.AUTH_FAIL]}
         self.http = HTTP.http_res()
         self.http.set_url(self.host+gconst.USER_INFO_READ)
         self.arg_pass_in = {}
@@ -63,7 +63,7 @@ class auth_tokenInfoRead_test:
             return 'v'      # if all arguments are valid, then it is a valid case
         if arg_list.count(gconst.AUTH_FAIL) > 0:
             return gconst.AUTH_FAIL      # if any of the arguments msg is gconst.AUTH_FAIL, then result is gconst.AUTH_FAIL
-        return gconst.AUTH_FAIL
+        return gconst.CLT_TOO_LONG
         
     def blackbox_test(self):
         # All the combination of test cases since only two arguments
@@ -119,6 +119,23 @@ class auth_tokenInfoRead_test:
                                               self.arg_pass_in,\
                                               self.http.contents,\
                                               gconst.AUTH_FAIL+': '+gconst.ERROR[gconst.AUTH_FAIL])
+                        # increment the invalid case id list and unexpected case counter
+                        self.invalid_case_id_list.append('UIR'+str(self.total_case))
+                        self.unexpect_case = self.unexpect_case + 1
+                    else:
+                        HTTP.write_succ_report(self.succ_report,\
+                                               'UIR'+str(self.total_case),\
+                                               self.arg_pass_in,\
+                                               self.http.contents)
+                elif exp_result == gconst.CLT_TOO_LONG:
+                    if (self.http.http_code != 200) or \
+                       (self.http.cont_dict['result'] != 'failure') or \
+                       (self.http.cont_dict['errors'][0]['code'] != gconst.CLT_TOO_LONG):
+                        HTTP.write_err_report(self.err_report,\
+                                              'UIR'+str(self.total_case),\
+                                              self.arg_pass_in,\
+                                              self.http.contents,\
+                                              gconst.CLT_TOO_LONG+': '+gconst.ERROR[gconst.CLT_TOO_LONG])
                         # increment the invalid case id list and unexpected case counter
                         self.invalid_case_id_list.append('UIR'+str(self.total_case))
                         self.unexpect_case = self.unexpect_case + 1

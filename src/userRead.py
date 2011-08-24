@@ -13,7 +13,7 @@ import globConst as gconst
 
 # the boundary length for each argument
 TOKEN_LIMIT = 2000 # 2097000
-CLIENT_LIMIT = 2000 # 2096000
+CLIENT_LIMIT = 255
 CAMP_LIMIT = 2000 # 2097000
 CLS_LIMIT = 2000 # 2096000
 # boundary + INCR = gconst.AUTH_FAIL NOT FOUND
@@ -21,7 +21,7 @@ CLS_LIMIT = 2000 # 2096000
 # Currently we disable this, because too large boundary hurts performance
 INCR = 2000
 # Total numbe of cases for User Read API
-TOTAL_CASE = 75 + 485 + 602
+TOTAL_CASE = 75 + 510 + 747
 
 # Testing class for User Read API
 class userRead_test:
@@ -48,12 +48,12 @@ class userRead_test:
                               'class_urn_list': ['v', 'v', 'v', 'v', 'v']}
         # TODO: add 'a'*(CLIENT_LIMIT+INCR), 'a'*(CAMP_LIMIT+INCR), 'a'*(CLS_LIMIT+INCR) when you have reasonable limit
         self.invalid_arg = {'auth_token': [gconst.MISS, '', gconst.RAND_STR, 'a'*TOKEN_LIMIT, 'auth_token1'],\
-                            'client': [gconst.MISS, 'client1'],\
+                            'client': [gconst.MISS, 'client1', 'a'*(CLIENT_LIMIT+1)],\
                             'campaign_urn_list': [gconst.RAND_STR, 'a'*CAMP_LIMIT],\
                             'class_urn_list': [gconst.RAND_STR, 'a'*CLS_LIMIT]}
         # TODO: add gconst.AUTH_FAIL for 'client', 'campaign_urn_list' and 'class_urn_list' when you have reasonable limit
         self.invalid_arg_msg = {'auth_token': [gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL],\
-                                'client': [gconst.AUTH_FAIL, gconst.AUTH_FAIL],\
+                                'client': [gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.CLT_TOO_LONG],\
                                 'campaign_urn_list': [gconst.INVALID_CAMP_URN, gconst.INVALID_CAMP_URN],\
                                 'class_urn_list': [gconst.INVALID_CLS_URN, gconst.INVALID_CLS_URN]}
         self.para_name_list = ['auth_token', 'client', 'campaign_urn_list', 'class_urn_list']
@@ -86,6 +86,8 @@ class userRead_test:
             return gconst.INVALID_CLS_URN
         if arg_list.count(gconst.AUTH_FAIL) > 0:
             return gconst.AUTH_FAIL
+        if arg_list.count(gconst.CLT_TOO_LONG) > 0:
+            return gconst.CLT_TOO_LONG
         if arg_list.count(gconst.NO_PERM_IN_CAMP) > 0:
             return gconst.NO_PERM_IN_CAMP
         return gconst.NO_PERM_IN_CLS
@@ -224,6 +226,23 @@ class userRead_test:
                                                          self.arg_pass_in,\
                                                          self.http.contents,\
                                                          gconst.AUTH_FAIL+': '+gconst.ERROR[gconst.AUTH_FAIL])
+                                    # increment the invalid case id list and unexpected case counter
+                                    self.invalid_case_id_list.append('UR'+str(self.total_case))
+                                    self.unexpect_case = self.unexpect_case + 1
+                                else:
+                                    HTTP.write_succ_report(self.succ_report,\
+                                                           'UR'+str(self.total_case),\
+                                                           self.arg_pass_in,\
+                                                           self.http.contents)
+                            elif exp_result == gconst.CLT_TOO_LONG:
+                                if (self.http.http_code != 200) or \
+                                   (self.http.cont_dict['result'] != 'failure') or \
+                                   (self.http.cont_dict['errors'][0]['code'] != gconst.CLT_TOO_LONG):
+                                    HTTP.write_err_report(self.err_report,\
+                                                         'UR'+str(self.total_case),\
+                                                         self.arg_pass_in,\
+                                                         self.http.contents,\
+                                                         gconst.CLT_TOO_LONG+': '+gconst.ERROR[gconst.CLT_TOO_LONG])
                                     # increment the invalid case id list and unexpected case counter
                                     self.invalid_case_id_list.append('UR'+str(self.total_case))
                                     self.unexpect_case = self.unexpect_case + 1
