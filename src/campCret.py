@@ -297,7 +297,7 @@ class campCret_test:
                     print >> sys.stderr, 'Error: Cannot delete existing campaign'
                     sys.exit(1)
         else:
-            print >> sys.stderr, 'Error: Unexpected single argument invalid test case'
+            print >> sys.stderr, 'Error: Unexpected invalid test case'
             sys.exit(1)
                                        
         
@@ -358,7 +358,7 @@ class campCret_test:
                                                                    'CC'+str(self.total_case),\
                                                                    self.arg_pass_in,\
                                                                    self.http.contents)
-                                            # need to delete the campaign after writing the success report
+                                            # need to delete the campaign after expected creation
                                             result = HTTP.delete_camp(self.host, self.TOKEN, gconst.CAMP_URN)
                                             if result != 'success':
                                                 print >> sys.stderr, 'Error: Cannot delete existing campaign'
@@ -366,6 +366,8 @@ class campCret_test:
                                     else:
                                         print >> sys.stderr, 'Error: Invalid valid test case'
                                         sys.exit(1)
+                                    if self.err_report != []:
+                                        print self.err_report
                                     # update arg_pass_in and arg_pass_in_msg
                                     self.update_arg_pass_in('description', des, 1)
                                     self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
@@ -391,9 +393,9 @@ class campCret_test:
         ########################################################################
         ########################################################################    
         # Part II: Invalid case with one invalid argument
-        arg = []
         for para in self.para_name_list:
             index = self.para_name_list.index(para)
+            arg = []
             # each turn pick one as invalid argument
             self.para_name_list.remove(para)
             # store the only one invalid argument
@@ -445,6 +447,8 @@ class campCret_test:
                                                self.total_case*100/TOTAL_CASE)
                                         # check the response
                                         self.err_response_check(exp_result)
+                                        if self.err_report != []:
+                                            print self.err_report
                                         # update arg_pass_in and arg_pass_in_msg
                                         self.update_arg_pass_in(arg[6], a6, 1)
                                         self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
@@ -472,16 +476,17 @@ class campCret_test:
         ########################################################################
         ########################################################################    
         # Part III: Invalid case with two invalid arguments
-        arg = []
         # Get first invalid argument
         for para1 in self.para_name_list:
             index1 = self.para_name_list.index(para1)
+            arg = []
             arg.append(para1)
             # each turn remove one invalid parameter from the para_name_list
             self.para_name_list.remove(para1)
             # Get second invalid argument
             for para2 in self.para_name_list[index1:]:
                 index2 = self.para_name_list.index(para2)
+                arg = [para1]
                 arg.append(para2)
                 # each turn remove one invalid parameter from the para_name_list
                 self.para_name_list.remove(para2)
