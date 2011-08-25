@@ -3,9 +3,9 @@
 # This is a Campaign Create API black box testing file
 # If any spec changes on the limit of argument,
 # please only modify the constant variables below
-#######################################
-# Testing time Approximation: 
-#######################################
+########################################
+# Testing time Approximation: 1 hr 3 min
+########################################
 
 import sys
 import os.path
@@ -20,9 +20,8 @@ RUN_STATE_LIMIT = 2000 # 2096000
 PRI_STATE_LIMIT = 2000 # 2096000
 CLS_LIMIT = 2000 # 2096000
 DES_LIMIT = 2000 # 2096000
-# undecided boundary + INCR = gconst.AUTH_FAIL NOT FOUND
-# only apply this to auth_token and client argument
-# other argument just increment by 1
+# undecided boundary + INCR = gconst.AUTH_FAIL
+# Apply to everything except client
 INCR = 2000
 # Total numbe of cases
 TOTAL_CASE = 72 + 1032 + 5898
@@ -53,8 +52,10 @@ if not os.path.exists(XML_FILE) or not os.path.exists(XML_DOC) or \
 class campCret_test:
     def __init__(self, server):
         if server == 'mob':
+            # moblizing server
             self.host = gconst.HOST
         elif server == 'and':
+            # andwellness server
             self.host = gconst.WELL
         else:
             print >> sys.stderr, 'Error: Invalid host URL'

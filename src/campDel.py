@@ -3,9 +3,9 @@
 # This is a Campaign Delete API black box testing file
 # If any spec changes on the limit of argument,
 # please only modify the constant variables below
-#######################################
-# Testing time Approximation: 
-#######################################
+##########################################
+# Testing time Approximation: 2 min 10 sec
+##########################################
 
 import sys
 import httpResponse as HTTP
