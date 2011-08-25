@@ -57,9 +57,9 @@ def main(valid_list, invalid_list):
     
 if __name__ == "__main__":
     # number of cases per each valid argument
-    valid = [1,3,2,2,2,1,3]
+    valid = [1,3,2]
     # number of cases per each invalid argument
-    invalid = [4,2,3,3,4,4,1]
+    invalid = [4,3,6]
     main(valid, invalid)
     
     
