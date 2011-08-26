@@ -39,10 +39,10 @@ Here are things you need to know for this black testing program:
 4. -f FILE, --file FILE
 # Print the output to a file with filename FILE. By default, print to "./report.log"
 5. -p PRINT_MODE, --print PRINT_MODE
-# PRINT_MODE = {std, file, all, none}
+# PRINT_MODE = {std, file, all}
 # Choose to print to screen or save the result to a log file
 6. -r RESULT, --result RESULT
-# RESULT = {succ, err, all, none}
+# RESULT = {succ, err, all}
 # Choose to print or save success message or print or save error message
 7. -s SERVER, --server SERVER
 # SERVER = {and, mob}
