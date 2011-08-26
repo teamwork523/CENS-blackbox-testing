@@ -2,6 +2,8 @@
 The black box testing project for CENS AndWellness or Moblizing server. 
 All testing scripts or other source code live in this repository.
 
+To run the program: ./blackbox.py [OPTION]
+
 == Server Requirement ==
 1. User 'ohmage.d.s' should be a supervisor on both server
 2. User 'ohmage.d.s' should be privileged in the class 'urn:testing:haokun' on both server
