@@ -4,7 +4,7 @@
 # If any spec changes on the limit of argument,
 # please only modify the constant variables below
 ##########################################
-# Testing time Approximation: 8 min 30 sec
+# Testing time Approximation: 4 min 15 sec
 ##########################################
 
 import sys
@@ -389,7 +389,7 @@ class campCret_test:
                                     self.http.request(1)
                                     self.total_case = self.total_case + 1
                                     # Print status
-                                    print 'Processing Case ID {0}.\n{1}% to finish Campaign Update API.'.format('CC'+str(self.total_case), \
+                                    print 'Processing Case ID {0}.\n{1}% to finish Campaign Create API.'.format('CC'+str(self.total_case), \
                                           self.total_case*100/TOTAL_CASE)
                                     # Check the response
                                     if exp_result == 'v':
@@ -490,7 +490,7 @@ class campCret_test:
                         self.http.request(1)
                         self.total_case = self.total_case + 1
                         # Print status
-                        print 'Processing Case ID {0}.\n{1}% to finish Campaign Update API.'.format('CD'+str(self.total_case), \
+                        print 'Processing Case ID {0}.\n{1}% to finish Campaign Create API.'.format('CC'+str(self.total_case), \
                               self.total_case*100/TOTAL_CASE)
                         # check the response
                         self.err_response_check(exp_result)

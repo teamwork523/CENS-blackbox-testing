@@ -46,7 +46,7 @@ Here are things you need to know for this black testing program:
 # Choose to print or save success message or print or save error message
 7. -s SERVER, --server SERVER
 # SERVER = {and, mob}
-# and = andwellness server
+# and = andwellness server (default)
 # mob = mobilizing server
 # Pick a server to run the program
 

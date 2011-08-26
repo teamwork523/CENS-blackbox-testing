@@ -22,7 +22,7 @@ INCR = 2000
 TOTAL_CASE = 36
 
 # Testing class for auth_token Info Read API
-class auth_tokenInfoRead_test:
+class userInfoRead_test:
     def __init__(self, server):
         if server == 'mob':
             self.host = gconst.HOST
