@@ -31,18 +31,14 @@ Here are things you need to know for this black testing program:
 == Options ==
 1. -h, --help
 # Show usage message.
-
 2. -v, --version
 # Show version message.
-
 3. --api API_NAME
 # API_NAME = {auth_token, user_read, user_info_read, xml, camp_cret, camp_del, camp_up}
 # Choose a specific API to test. By default, all those APIs will be tested.
-
 4. -p PRINT_MODE, --print PRINT_MODE
 # PRINT_MODE = {std, file, all, none}
 # Choose to print to screen or save the result to a log file
-
 5. -r RESULT, --result RESULT
 # RESULT = {succ, err, all, none}
 # Choose to print or save success message or print or save error message
