@@ -3,9 +3,9 @@
 # This is a Campaign Create API black box testing file
 # If any spec changes on the limit of argument,
 # please only modify the constant variables below
-########################################
-# Testing time Approximation: 1 hr 3 min
-########################################
+##########################################
+# Testing time Approximation: 8 min 30 sec
+##########################################
 
 import sys
 import os.path
@@ -24,7 +24,7 @@ DES_LIMIT = 2000 # 2096000
 # Apply to everything except client
 INCR = 2000
 # Total numbe of cases
-TOTAL_CASE = 72 + 1032 + 5898
+TOTAL_CASE = 72 + 26 + 283
 
 # check path exists
 # A file path = TEST_FILE_FOLDER + FILE PATH RELATIVE TO FOLDER
@@ -83,17 +83,20 @@ class campCret_test:
         # Add boundary case for 'running_state', 'privacy_state', 
         self.invalid_arg = {'auth_token': [gconst.MISS, gconst.RAND_STR, 'a'*TOKEN_LIMIT, 'auth_token1'],\
                             'client': [gconst.MISS, 'client1', 'a'*(CLIENT_LIMIT+1)],\
-                            'running_state': [gconst.MISS, 'a'*RUN_STATE_LIMIT, 'running_state1'],\
-                            'privacy_state': [gconst.MISS, 'a'*PRI_STATE_LIMIT, 'privacy_state1'],\
-                            'class_urn_list': [gconst.MISS, gconst.CLS_UNKNOWN, 'a'*CLS_LIMIT, 'class_urn_list1'],\
-                            'xml': [(pycurl.FORM_FILE, XML_PDF), (pycurl.FORM_FILE, XML_DOC), (pycurl.FORM_FILE, XML_EXE), (pycurl.FORM_FILE, XML_FOLDER)],\
+                            'running_state': ['', gconst.RAND_STR, gconst.MISS, 'a'*RUN_STATE_LIMIT, 'running_state1'],\
+                            'privacy_state': ['', gconst.RAND_STR, gconst.MISS, 'a'*PRI_STATE_LIMIT, 'privacy_state1'],\
+                            'class_urn_list': [gconst.RAND_STR, gconst.MISS, gconst.CLS_UNKNOWN, 'a'*CLS_LIMIT, 'class_urn_list1'],\
+                            'xml': [(pycurl.FORM_FILE, XML_PDF), (pycurl.FORM_FILE, XML_DOC), (pycurl.FORM_FILE, XML_EXE)],\
                             'description':['a'*(DES_LIMIT+INCR)]}
         self.invalid_arg_msg = {'auth_token': [gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.AUTH_FAIL],\
                                 'client': [gconst.AUTH_FAIL, gconst.AUTH_FAIL, gconst.CLT_TOO_LONG],\
-                                'running_state': [gconst.INVALID_RUN_STATE, gconst.INVALID_RUN_STATE, gconst.INVALID_RUN_STATE],\
-                                'privacy_state': [gconst.INVALID_PRI_STATE, gconst.INVALID_PRI_STATE, gconst.INVALID_PRI_STATE],\
-                                'class_urn_list': [gconst.INVALID_CLS_URN, gconst.INVALID_CLS_URN, gconst.INVALID_CLS_URN, gconst.INVALID_CLS_URN],\
-                                'xml': [gconst.INVALID_XML, gconst.INVALID_XML, gconst.INVALID_XML, gconst.INVALID_XML],\
+                                'running_state': [gconst.INVALID_RUN_STATE, gconst.INVALID_RUN_STATE,\
+                                                  gconst.INVALID_RUN_STATE, gconst.INVALID_RUN_STATE, gconst.INVALID_RUN_STATE],\
+                                'privacy_state': [gconst.INVALID_PRI_STATE, gconst.INVALID_PRI_STATE,\
+                                                  gconst.INVALID_PRI_STATE, gconst.INVALID_PRI_STATE, gconst.INVALID_PRI_STATE],\
+                                'class_urn_list': [gconst.INVALID_CLS_URN, gconst.INVALID_CLS_URN, \
+                                                   gconst.INVALID_CLS_URN, gconst.INVALID_CLS_URN, gconst.INVALID_CLS_URN],\
+                                'xml': [gconst.INVALID_XML, gconst.INVALID_XML, gconst.INVALID_XML],\
                                 'description': ['v']}
         self.para_name_list = ['auth_token', 'client', 'running_state', 'privacy_state', 'class_urn_list', 'xml', 'description']
         self.http = HTTP.http_res()
@@ -112,6 +115,14 @@ class campCret_test:
                                         # Failed/Passed: Expectation: 'expected result detail'
                                         # **************************************************
         
+    def form_one_valid_arg(self):
+        # pick the first valid argument in each argument
+        self.arg_pass_in = {}
+        self.arg_pass_in_msg = []
+        for x in self.para_name_list:
+            self.update_arg_pass_in(x, self.valid_arg[x][0], 0)
+            self.arg_pass_in_msg.append('v')
+    
     def result_det(self, arg_list):
         # determine the result of expected response
         # The checking order is the same as that of the server
@@ -137,15 +148,28 @@ class campCret_test:
         if flag == 0:
             if value == 'auth_token1':
                 self.arg_pass_in[value] = self.TOKEN
+                if self.arg_pass_in.has_key(arg):
+                    del self.arg_pass_in[arg]
             elif value == 'client1':
                 self.arg_pass_in[value] = 'curl'
+                if self.arg_pass_in.has_key(arg):
+                    del self.arg_pass_in[arg]
             elif value == 'running_state1':
                 self.arg_pass_in[value] = 'running'
+                if self.arg_pass_in.has_key(arg):
+                    del self.arg_pass_in[arg]
             elif value == 'privacy_state1':
                 self.arg_pass_in[value] = 'private'
+                if self.arg_pass_in.has_key(arg):
+                    del self.arg_pass_in[arg]
             elif value == 'class_urn_list1':
                 self.arg_pass_in[value] = gconst.CLS_URN
-            elif value != gconst.MISS:
+                if self.arg_pass_in.has_key(arg):
+                    del self.arg_pass_in[arg]
+            elif value == gconst.MISS:
+                if self.arg_pass_in.has_key(arg):
+                    del self.arg_pass_in[arg]
+            else:
                 self.arg_pass_in[arg] = value
         elif flag == 1:
             if value == 'auth_token1' or value == 'client1' or \
@@ -169,6 +193,29 @@ class campCret_test:
                                       self.arg_pass_in,\
                                       self.http.contents,\
                                       gconst.AUTH_FAIL+': '+gconst.ERROR[gconst.AUTH_FAIL])
+                # increment the invalid case id list and unexpected case counter
+                self.invalid_case_id_list.append('CC'+str(self.total_case))
+                self.unexpect_case = self.unexpect_case + 1
+                # Unexpected 'success' create campaign, need to delete the wrong campaign
+                if (self.http.http_code == 200) and (self.http.cont_dict['result'] == 'success'):
+                    result = HTTP.delete_camp(self.host, self.TOKEN, gconst.CAMP_URN)
+                    if result != 'success':
+                        print >> sys.stderr, 'Error: Cannot delete existing campaign'
+                        sys.exit(1)
+            else:
+                HTTP.write_succ_report(self.succ_report,\
+                                       'CC'+str(self.total_case),\
+                                       self.arg_pass_in,\
+                                       self.http.contents)
+        elif exp_result == gconst.CLT_TOO_LONG:
+            if (self.http.http_code != 200) or \
+               (self.http.cont_dict['result'] != 'failure') or \
+               (self.http.cont_dict['errors'][0]['code'] != gconst.CLT_TOO_LONG):
+                HTTP.write_err_report(self.err_report,\
+                                      'CC'+str(self.total_case),\
+                                      self.arg_pass_in,\
+                                      self.http.contents,\
+                                      gconst.CLT_TOO_LONG+': '+gconst.ERROR[gconst.CLT_TOO_LONG])
                 # increment the invalid case id list and unexpected case counter
                 self.invalid_case_id_list.append('CC'+str(self.total_case))
                 self.unexpect_case = self.unexpect_case + 1
@@ -305,6 +352,7 @@ class campCret_test:
     def blackbox_test(self):
         # Should delete the old campaign first
         HTTP.delete_camp(self.host, self.TOKEN, gconst.CAMP_URN)
+
         # Combination of three kinds of test cases defined in README
         # Special cases for 'Missing Argument' of argument 'description'
         # Part I: Valid Case
@@ -341,7 +389,7 @@ class campCret_test:
                                     self.http.request(1)
                                     self.total_case = self.total_case + 1
                                     # Print status
-                                    print 'Processing Case ID {0}.\n{1}% to finish User Read API.'.format('CC'+str(self.total_case), \
+                                    print 'Processing Case ID {0}.\n{1}% to finish Campaign Update API.'.format('CC'+str(self.total_case), \
                                           self.total_case*100/TOTAL_CASE)
                                     # Check the response
                                     if exp_result == 'v':
@@ -367,8 +415,6 @@ class campCret_test:
                                     else:
                                         print >> sys.stderr, 'Error: Invalid valid test case'
                                         sys.exit(1)
-                                    if self.err_report != []:
-                                        print self.err_report
                                     # update arg_pass_in and arg_pass_in_msg
                                     self.update_arg_pass_in('description', des, 1)
                                     self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
@@ -390,182 +436,67 @@ class campCret_test:
             # update arg_pass_in and arg_pass_in_msg
             del self.arg_pass_in['auth_token']
             self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
-            
+
         ########################################################################
         ########################################################################    
         # Part II: Invalid case with one invalid argument
-        for para in self.para_name_list:
-            index = self.para_name_list.index(para)
-            arg = []
-            # each turn pick one as invalid argument
-            self.para_name_list.remove(para)
-            # store the only one invalid argument
-            arg.append(para)
-            # store all other valid arguments
-            for x in range(1,7):
-                arg.append(self.para_name_list[x-1])
-            # Add first argument
-            for a0 in self.invalid_arg[arg[0]]:
-                self.arg_pass_in = {}
-                self.arg_pass_in_msg = []
-                self.update_arg_pass_in(arg[0], a0, 0)
-                self.arg_pass_in_msg.append(self.invalid_arg_msg[arg[0]][self.invalid_arg[arg[0]].index(a0)])
-                # Add second arguemnt
-                for a1 in self.valid_arg[arg[1]]:
-                    self.update_arg_pass_in(arg[1], a1, 0)
-                    self.arg_pass_in_msg.append(self.valid_arg_msg[arg[1]][self.valid_arg[arg[1]].index(a1)])
-                    # Add third arguemnt
-                    for a2 in self.valid_arg[arg[2]]:
-                        self.update_arg_pass_in(arg[2], a2, 0)
-                        self.arg_pass_in_msg.append(self.valid_arg_msg[arg[2]][self.valid_arg[arg[2]].index(a2)])
-                        # Add forth arguemnt
-                        for a3 in self.valid_arg[arg[3]]:
-                            self.update_arg_pass_in(arg[3], a3, 0)
-                            self.arg_pass_in_msg.append(self.valid_arg_msg[arg[3]][self.valid_arg[arg[3]].index(a3)])
-                            # Add fifth arguemnt
-                            for a4 in self.valid_arg[arg[4]]:
-                                self.update_arg_pass_in(arg[4], a4, 0)
-                                self.arg_pass_in_msg.append(self.valid_arg_msg[arg[4]][self.valid_arg[arg[4]].index(a4)])
-                                # Add sixth arguemnt
-                                for a5 in self.valid_arg[arg[5]]:
-                                    self.update_arg_pass_in(arg[5], a5, 0)
-                                    self.arg_pass_in_msg.append(self.valid_arg_msg[arg[5]][self.valid_arg[arg[5]].index(a5)])
-                                    # Add seventh arguemnt
-                                    for a6 in self.valid_arg[arg[6]]:
-                                        self.update_arg_pass_in(arg[6], a6, 0)
-                                        self.arg_pass_in_msg.append(self.valid_arg_msg[arg[6]][self.valid_arg[arg[6]].index(a6)])
-                                        # Determine the expected result
-                                        exp_result = self.result_det(self.arg_pass_in_msg)
-                                        # Use zip(dict.keys(), dict.values())
-                                        # can convert dict into a list of tuples
-                                        self.http.set_pass_in_with_file(zip(self.arg_pass_in.keys(), self.arg_pass_in.values()))
-                                        # Need to upload a file, set flag to 1
-                                        # to change the type of HTTP request
-                                        self.http.request(1)
-                                        self.total_case = self.total_case + 1
-                                        # Print status
-                                        print 'Processing Case ID {0}.\n{1}% to finish User Read API.'.format('CC'+str(self.total_case), \
-                                               self.total_case*100/TOTAL_CASE)
-                                        # check the response
-                                        self.err_response_check(exp_result)
-                                        if self.err_report != []:
-                                            print self.err_report
-                                        # update arg_pass_in and arg_pass_in_msg
-                                        self.update_arg_pass_in(arg[6], a6, 1)
-                                        self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
-                                    # update arg_pass_in and arg_pass_in_msg
-                                    self.update_arg_pass_in(arg[5], a5, 1)
-                                    self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
-                                # update arg_pass_in and arg_pass_in_msg
-                                self.update_arg_pass_in(arg[4], a4, 1)
-                                self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
-                            # update arg_pass_in and arg_pass_in_msg
-                            self.update_arg_pass_in(arg[3], a3, 1)
-                            self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
-                        # update arg_pass_in and arg_pass_in_msg
-                        self.update_arg_pass_in(arg[2], a2, 1)
-                        self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
-                    # update arg_pass_in and arg_pass_in_msg
-                    self.update_arg_pass_in(arg[1], a1, 1)
-                    self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
-                # update arg_pass_in and arg_pass_in_msg
-                self.update_arg_pass_in(arg[0], a0, 1)
-                self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
-            # restore the para_name_list
-            self.para_name_list.insert(index, para)
+        # Here I reduce the number of test cases by only picking one combination
+        # of valid case
+        # pick each invalid argument once
+        for arg_name in self.para_name_list:
+            for arg in self.invalid_arg[arg_name]:
+                # first keep all argument valid
+                self.form_one_valid_arg()
+                self.update_arg_pass_in(arg_name, arg, 0)
+                self.arg_pass_in_msg.append(self.invalid_arg_msg[arg_name][self.invalid_arg[arg_name].index(arg)])
+                # Determine the expected result
+                exp_result = self.result_det(self.arg_pass_in_msg)
+                # Use zip(dict.keys(), dict.values())
+                # can convert dict into a list of tuples
+                self.http.set_pass_in_with_file(zip(self.arg_pass_in.keys(), self.arg_pass_in.values()))
+                # Need to upload a file, set flag to 1
+                # to change the type of HTTP request
+                self.http.request(1)
+                self.total_case = self.total_case + 1
+                # Print status
+                print 'Processing Case ID {0}.\n{1}% to finish Campaign Create API.'.format('CC'+str(self.total_case), \
+                      self.total_case*100/TOTAL_CASE)
+                # check the response
+                self.err_response_check(exp_result)
         
         ########################################################################
         ########################################################################    
         # Part III: Invalid case with two invalid arguments
-        # Get first invalid argument
-        for para1 in self.para_name_list:
-            index1 = self.para_name_list.index(para1)
-            arg = []
-            arg.append(para1)
-            # each turn remove one invalid parameter from the para_name_list
-            self.para_name_list.remove(para1)
-            # Get second invalid argument
-            for para2 in self.para_name_list[index1:]:
-                index2 = self.para_name_list.index(para2)
-                arg = [para1]
-                arg.append(para2)
-                # each turn remove one invalid parameter from the para_name_list
-                self.para_name_list.remove(para2)
-                # Store all other valid argument
-                for x in range(1,6):
-                    arg.append(self.para_name_list[x-1])
-                # Add first argument
-                for a0 in self.invalid_arg[arg[0]]:
-                    self.arg_pass_in = {}
-                    self.arg_pass_in_msg = []
-                    self.update_arg_pass_in(arg[0], a0, 0)
-                    self.arg_pass_in_msg.append(self.invalid_arg_msg[arg[0]][self.invalid_arg[arg[0]].index(a0)])
-                    # Add second arguemnt
-                    for a1 in self.invalid_arg[arg[1]]:
-                        self.update_arg_pass_in(arg[1], a1, 0)
-                        self.arg_pass_in_msg.append(self.invalid_arg_msg[arg[1]][self.invalid_arg[arg[1]].index(a1)])
-                        # Add third arguemnt
-                        for a2 in self.valid_arg[arg[2]]:
-                            self.update_arg_pass_in(arg[2], a2, 0)
-                            self.arg_pass_in_msg.append(self.valid_arg_msg[arg[2]][self.valid_arg[arg[2]].index(a2)])
-                            # Add forth arguemnt
-                            for a3 in self.valid_arg[arg[3]]:
-                                self.update_arg_pass_in(arg[3], a3, 0)
-                                self.arg_pass_in_msg.append(self.valid_arg_msg[arg[3]][self.valid_arg[arg[3]].index(a3)])
-                                # Add fifth arguemnt
-                                for a4 in self.valid_arg[arg[4]]:
-                                    self.update_arg_pass_in(arg[4], a4, 0)
-                                    self.arg_pass_in_msg.append(self.valid_arg_msg[arg[4]][self.valid_arg[arg[4]].index(a4)])
-                                    # Add sixth arguemnt
-                                    for a5 in self.valid_arg[arg[5]]:
-                                        self.update_arg_pass_in(arg[5], a5, 0)
-                                        self.arg_pass_in_msg.append(self.valid_arg_msg[arg[5]][self.valid_arg[arg[5]].index(a5)])
-                                        # Add seventh arguemnt
-                                        for a6 in self.valid_arg[arg[6]]:
-                                            self.update_arg_pass_in(arg[6], a6, 0)
-                                            self.arg_pass_in_msg.append(self.valid_arg_msg[arg[6]][self.valid_arg[arg[6]].index(a6)]) 
-                                            # Determine the expected result
-                                            exp_result = self.result_det(self.arg_pass_in_msg)
-                                            # Use zip(dict.keys(), dict.values())
-                                            # can convert dict into a list of tuples
-                                            self.http.set_pass_in_with_file(zip(self.arg_pass_in.keys(), self.arg_pass_in.values()))
-                                            # Need to upload a file, set flag to 1
-                                            # to change the type of HTTP request
-                                            self.http.request(1)
-                                            self.total_case = self.total_case + 1
-                                            # Print status
-                                            print 'Processing Case ID {0}.\n{1}% to finish User Read API.'.format('CC'+str(self.total_case), \
-                                                  self.total_case*100/TOTAL_CASE)
-                                            # check the response
-                                            self.err_response_check(exp_result)
-                                            if self.err_report != []:
-                                                print self.err_report
-                                            # update arg_pass_in and arg_pass_in_msg
-                                            self.update_arg_pass_in(arg[6], a6, 1)
-                                            self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
-                                        # update arg_pass_in and arg_pass_in_msg
-                                        self.update_arg_pass_in(arg[5], a5, 1)
-                                        self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
-                                    # update arg_pass_in and arg_pass_in_msg
-                                    self.update_arg_pass_in(arg[4], a4, 1)
-                                    self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
-                                # update arg_pass_in and arg_pass_in_msg
-                                self.update_arg_pass_in(arg[3], a3, 1)
-                                self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
-                            # update arg_pass_in and arg_pass_in_msg
-                            self.update_arg_pass_in(arg[2], a2, 1)
-                            self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
+        # Here I reduce the number of test cases by only picking one combination
+        # of valid case
+        for arg_name1 in self.para_name_list:
+            index1 = self.para_name_list.index(arg_name1)
+            for arg_name2 in self.para_name_list[index1+1:]:
+                # add those two arguments into arg_pass_in dict
+                for arg1 in self.invalid_arg[arg_name1]:
+                    self.form_one_valid_arg()
+                    self.update_arg_pass_in(arg_name1, arg1, 0)
+                    self.arg_pass_in_msg.append(self.invalid_arg_msg[arg_name1][self.invalid_arg[arg_name1].index(arg1)])
+                    for arg2 in self.invalid_arg[arg_name2]:
+                        self.update_arg_pass_in(arg_name2, arg2, 0)
+                        self.arg_pass_in_msg.append(self.invalid_arg_msg[arg_name2][self.invalid_arg[arg_name2].index(arg2)])
+                        # Determine the expected result
+                        exp_result = self.result_det(self.arg_pass_in_msg)
+                        # Use zip(dict.keys(), dict.values())
+                        # can convert dict into a list of tuples
+                        self.http.set_pass_in_with_file(zip(self.arg_pass_in.keys(), self.arg_pass_in.values()))
+                        # Need to upload a file, set flag to 1
+                        # to change the type of HTTP request
+                        self.http.request(1)
+                        self.total_case = self.total_case + 1
+                        # Print status
+                        print 'Processing Case ID {0}.\n{1}% to finish Campaign Update API.'.format('CD'+str(self.total_case), \
+                              self.total_case*100/TOTAL_CASE)
+                        # check the response
+                        self.err_response_check(exp_result)
                         # update arg_pass_in and arg_pass_in_msg
-                        self.update_arg_pass_in(arg[1], a1, 1)
+                        self.update_arg_pass_in(arg_name2, arg2, 1)
                         self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
-                    # update arg_pass_in and arg_pass_in_msg
-                    self.update_arg_pass_in(arg[0], a0, 1)
-                    self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
-                # restore the para_name_list
-                self.para_name_list.insert(index2, para2)
-            # restore the para_name_list
-            self.para_name_list.insert(index1, para1)
-            
         
 cc = campCret_test('and')
 cc.blackbox_test()
