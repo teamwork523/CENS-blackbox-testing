@@ -485,18 +485,6 @@ class userRead_test:
             # restore the para_name_list
             self.para_name_list.insert(index1, arg1)
         
-ur = userRead_test('and')
-ur.blackbox_test()
-
-print "\nError Report"
-for x in ur.err_report:
-    print x
-
-print "Summary Section"
-print "Total number of cases expected {0}".format(TOTAL_CASE)
-print "Total number of cases: {0}".format(ur.total_case)
-print "Invalid cases: {0}".format(ur.unexpect_case)
-print "Invalid case list: {0}".format(ur.invalid_case_id_list)
                 
         
         

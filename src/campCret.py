@@ -498,19 +498,6 @@ class campCret_test:
                         self.update_arg_pass_in(arg_name2, arg2, 1)
                         self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
         
-cc = campCret_test('and')
-cc.blackbox_test()
-
-print "\nError Report"
-for x in cc.err_report:
-    print x
-
-print "Summary Section"
-print "Total number of cases expected {0}".format(TOTAL_CASE)
-print "Total number of cases: {0}".format(cc.total_case)
-print "Invalid cases: {0}".format(cc.unexpect_case)
-print "Invalid case list: {0}".format(cc.invalid_case_id_list)
-        
         
         
         

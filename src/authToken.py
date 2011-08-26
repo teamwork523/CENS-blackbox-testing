@@ -152,17 +152,6 @@ class authToken_test:
             elif u != gconst.MISS:
                 del self.arg_pass_in['user']
             self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
-        
-a = authToken_test('and')
-a.blackbox_test()
-print "Error Report:"
-for x in a.err_report:
-    print x
-
-print "Summary Section"
-print "Total number of cases: {0}".format(a.total_case)
-print "Invalid cases: {0}".format(a.unexpect_case)
-print "Invalid case list: {0}".format(a.invalid_case_id_list)
 
         
 

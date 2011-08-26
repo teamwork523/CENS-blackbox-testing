@@ -347,20 +347,7 @@ class campDel_test:
                 # restore the para_name_list
                 self.para_name_list.insert(index2, para2)
             # restore the para_name_list
-            self.para_name_list.insert(index1, para1)
-        
-cd = campDel_test('and')
-cd.blackbox_test()
-
-print "\nError Report"
-for x in cd.err_report:
-    print x
-
-print "Summary Section"
-print "Total number of cases expected {0}".format(TOTAL_CASE)
-print "Total number of cases: {0}".format(cd.total_case)
-print "Invalid cases: {0}".format(cd.unexpect_case)
-print "Invalid case list: {0}".format(cd.invalid_case_id_list)         
+            self.para_name_list.insert(index1, para1)  
                     
                     
                     

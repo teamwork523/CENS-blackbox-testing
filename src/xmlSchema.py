@@ -378,19 +378,7 @@ class xmlSchema_test:
                                            'XML'+str(self.total_case),\
                                            self.arg_pass_in,\
                                            self.http.contents)
-                                           
-xml = xmlSchema_test('and')
-xml.blackbox_test()
 
-print "\nError Report"
-for x in xml.err_report:
-    print x
-
-print "Summary Section"
-print "Total number of cases expected {0}".format(TOTAL_CASE)
-print "Total number of cases: {0}".format(xml.total_case)
-print "Invalid cases: {0}".format(xml.unexpect_case)
-print "Invalid case list: {0}".format(xml.invalid_case_id_list)
                 
         
         

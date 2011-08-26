@@ -554,20 +554,6 @@ class campUp_test:
                         # update arg_pass_in and arg_pass_in_msg
                         self.update_arg_pass_in(arg_name2, arg2, 1)
                         self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
-        
-
-cu = campUp_test('and')
-cu.blackbox_test()
-
-print "\nError Report"
-for x in cu.err_report:
-    print x
-
-print "Summary Section"
-print "Total number of cases expected {0}".format(TOTAL_CASE)
-print "Total number of cases: {0}".format(cu.total_case)
-print "Invalid cases: {0}".format(cu.unexpect_case)
-print "Invalid case list: {0}".format(cu.invalid_case_id_list)
 
 
 

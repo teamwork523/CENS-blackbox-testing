@@ -160,14 +160,4 @@ class auth_tokenInfoRead_test:
                 del self.arg_pass_in['auth_token']
             self.arg_pass_in_msg.pop(len(self.arg_pass_in_msg)-1)
 
-a = auth_tokenInfoRead_test('and')
-a.blackbox_test()
-print "\nError Report:"
-for x in a.err_report:
-    print x
 
-print "Summary Section"
-print "Total number of cases: {0}".format(a.total_case)
-print "Invalid cases: {0}".format(a.unexpect_case)
-print "Invalid case list: {0}".format(a.invalid_case_id_list)  
-        
