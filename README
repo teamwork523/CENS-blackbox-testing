@@ -42,6 +42,11 @@ Here are things you need to know for this black testing program:
 5. -r RESULT, --result RESULT
 # RESULT = {succ, err, all, none}
 # Choose to print or save success message or print or save error message
+6. -s SERVER, --server SERVER
+# SERVER = {and, mob}
+# and = andwellness server
+# mob = mobilizing server
+# Pick a server to run the program
 
 == Contact Information ==
 If you have any question, please contact 
