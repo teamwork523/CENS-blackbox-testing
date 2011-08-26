@@ -77,11 +77,12 @@ class campDel_test:
         # gconst.AUTH_FAIL > CLT_LONG > CAMP
         if arg_list.count('v') == len(arg_list):
             return 'v'
+        # TODO: fix the 0700, 0200 and 0301 order here after fix the order on server
+        if arg_list.count(gconst.INVALID_CAMP_URN) > 0:
+            return gconst.INVALID_CAMP_URN
         if arg_list.count(gconst.AUTH_FAIL) > 0:
             return gconst.AUTH_FAIL
-        if arg_list.count(gconst.CLT_TOO_LONG) > 0:
-            return gconst.CLT_TOO_LONG
-        return gconst.INVALID_CAMP_URN
+        return gconst.CLT_TOO_LONG
 
     def update_arg_pass_in(self, arg, value, flag):
         # a helper function to update the self.arg_pass_in
