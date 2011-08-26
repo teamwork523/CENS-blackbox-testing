@@ -41,6 +41,14 @@ XML_FILE_DUP='/xml/test_dup.xml'
 XML_FILE_SAME_URN='/xml/test_urn_same.xml'
 RAND_STR='<>?:_+{}|,./;'
 MISS=0
+# user role add/remove
+ROLE_PAR='ohmage.d.p;participant'
+ROLE_ANA='ohmage.d.p;analyst'
+ROLE_AUT='ohmage.d.p;author'
+ROLE_SUP='ohmage.d.p;supervisor'
+NONEXIST_USER='xxxxxx;author'
+USER_INVALID='xxx;analyst'
+ROLE_INVALID='ohmage.d.p;xxx'
 
 # Error Summary
 # Here is a complete definition for error code and variables refering them
@@ -53,8 +61,10 @@ INVALID_PRI_STATE = '0704'
 INVALID_RUN_STATE = '0703'
 INVALID_ROLE = '0706'
 NO_PERM_IN_CAMP = '0707'
+CHANGE_CAMP_ID = '0708'
 INVALID_CLS_URN = '0900'
 NO_PERM_IN_CLS = '0905'
+INVALID_USERNAME = '1000'
 
 ERROR = {AUTH_FAIL: 'Authentication failed or missing required arguments.',\
          CLT_TOO_LONG: 'The client value is too long.',\
@@ -64,9 +74,10 @@ ERROR = {AUTH_FAIL: 'Authentication failed or missing required arguments.',\
          INVALID_RUN_STATE: 'Invalid running state.',\
          INVALID_ROLE: 'Invalid campaign role.',\
          NO_PERM_IN_CAMP: 'No permission to access all the campaigns in the list.',\
+         CHANGE_CAMP_ID: 'Cannot change campaign ID or name when updating XML',\
          INVALID_CLS_URN: 'Invalid class URN list or invalid URN in list.',\
-         NO_PERM_IN_CLS: 'No permission to access all the classes in the list.'
-         }
+         NO_PERM_IN_CLS: 'No permission to access all the classes in the list.',\
+         INVALID_USERNAME: 'The username is invalid'}
 
 
 
