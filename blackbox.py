@@ -132,6 +132,9 @@ Argument must from {and, mob}""")
                   'Total unexpected cases: {0}'.format(unexpect_case),\
                   'Here is a list of unexpected case ID: {0}'.format(invalid_case_id_list)]
     
+    # empty the target file first
+    write_report_to_file([], options.FILE, 'w')
+    
     # Output request file to request place
     if options.PRINT_MODE.lower() == 'std':
         if options.RESULT.lower() == 'succ':
